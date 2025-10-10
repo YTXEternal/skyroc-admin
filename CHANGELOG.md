@@ -1,6 +1,22 @@
 # Changelog
 
 
+## [v2.1.1](https://github.com/soybeanjs/soybean-admin-react/compare/v2.1.0...v2.1.1) (2025-10-11)
+
+### &nbsp;&nbsp;&nbsp;🚀 Features
+
+- **project**:
+  - update ui url &nbsp;-&nbsp; by @SkyRoc1 [<samp>(6f4b5)</samp>](https://github.com/soybeanjs/soybean-admin-react/commit/6f4b57a)
+  - remove unnecessary key prop from ButtonIcon &nbsp;-&nbsp; by @SkyRoc1 [<samp>(b5711)</samp>](https://github.com/soybeanjs/soybean-admin-react/commit/b571171)
+
+### &nbsp;&nbsp;&nbsp;🛠 Optimizations
+
+- **projects**: remove deprecated disableCache from iconify setup &nbsp;-&nbsp; by @wenyuanw [<samp>(1c17b)</samp>](https://github.com/soybeanjs/soybean-admin-react/commit/1c17be2)
+
+### &nbsp;&nbsp;&nbsp;❤️ Contributors
+
+[![SkyRoc1](https://github.com/SkyRoc1.png?size=48)](https://github.com/SkyRoc1)&nbsp;&nbsp;[![wenyuanw](https://github.com/wenyuanw.png?size=48)](https://github.com/wenyuanw)&nbsp;&nbsp;
+
 ## [v2.1.0](https://github.com/soybeanjs/soybean-admin-react/compare/v2.0.0...v2.1.0) (2025-08-18)
 
 ### &nbsp;&nbsp;&nbsp;🚀 Features
