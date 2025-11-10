@@ -1,5 +1,5 @@
 {
-  "name": "soybean-admin-react",
+  "name": "skyroc-admin",
   "type": "module",
   "version": "2.1.2",
   "private": false,
@@ -11,12 +11,12 @@
     "url": "https://github.com/mufeng889"
   },
   "license": "MIT",
-  "homepage": "https://github.com/soybeanjs/soybean-admin-react",
+  "homepage": "https://github.com/soybeanjs/skyroc-admin",
   "repository": {
-    "url": "https://github.com/soybeanjs/soybean-admin-react.git"
+    "url": "https://github.com/soybeanjs/skyroc-admin.git"
   },
   "bugs": {
-    "url": "https://github.com/soybeanjs/soybean-admin-react/issues"
+    "url": "https://github.com/soybeanjs/skyroc-admin/issues"
   },
   "keywords": [
     "React admin",
