@@ -11,12 +11,12 @@
     "url": "https://github.com/mufeng889"
   },
   "license": "MIT",
-  "homepage": "https://github.com/soybeanjs/skyroc-admin",
+  "homepage": "https://github.com/Ohh-889/skyroc-admin",
   "repository": {
-    "url": "https://github.com/soybeanjs/skyroc-admin.git"
+    "url": "https://github.com/Ohh-889/skyroc-admin.git"
   },
   "bugs": {
-    "url": "https://github.com/soybeanjs/skyroc-admin/issues"
+    "url": "https://github.com/Ohh-889/skyroc-admin/issues"
   },
   "keywords": [
     "React admin",
@@ -131,5 +131,5 @@
   "lint-staged": {
     "*": "eslint --fix"
   },
-  "website": "https://react.soybeanjs.cn/home/"
+  "website": "https://skyroc-admin.com/home/"
 }
