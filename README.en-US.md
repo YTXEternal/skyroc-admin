@@ -17,28 +17,45 @@ This project is based on the outstanding open-source project [Soybean Admin](htt
 
 ## Introduction
 
-[`React SkyrocAdmin`](https://github.com/Ohh-889/skyroc-admin) is a fresh and elegant admin panel template built on the React19 stack. It adopts the latest frontend technologies, including:
+[`React SkyrocAdmin`](https://github.com/Ohh-889/skyroc-admin) is a fresh and elegant admin panel template built on the React19 stack. It adopts the latest frontend technologies:
 
-- 🚀 React 19 + ReactRouter V7 + Redux/toolkit
-- 🎨 Ant Design + UnoCSS
-- 📦 Vite 6 + TypeScript
-- 🔐 Role-based access control
-- 📱 Mobile-friendly adaptation
-- 🌍 Internationalization support
-- 🎯 Mock data integration
-- 📚 Comprehensive documentation
+### Core Tech Stack
 
-### Key Features:
+- 🚀 **React 19** - Latest React version with cutting-edge features
+- 🛤️ **React Router V7** - Powerful routing management system
+- 📦 **Redux Toolkit** - Modern state management solution
+- 🎨 **Ant Design 5.24** - Enterprise-level UI component library
+- ⚡️ **Vite 6** - Lightning-fast development build tool
+- 🎯 **TypeScript 5.7** - Complete type system
+- 🌈 **UnoCSS** - High-performance atomic CSS engine
+- 📦 **pnpm monorepo** - Efficient package management
 
-- 💡 Strict coding standards and elegant architecture
-- ⚡️ Ready to use out of the box, no complex setup needed
-- 🛠️ Rich components and theme customization
-- 📋 Automated file routing system
-- 🔧 Excellent type support
-- 📱 Responsive design, perfectly adapted for mobile
-- 🎨 Optimistic UI: Automatically captures and displays friendly error messages for debugging and monitoring purposes within components.
-- 🚀 Advanced routing features: Extends React-Router V7 API ，Provide convention-based file routing similar to Next.js, while also allowing custom reusable routes..
-- ⚡️ CLI tools: Built-in tools for Git commits, file deletions, releases, and more.
+### Key Features
+
+- 💡 **Code Quality** - Strict code standards, elegant architecture, complete TypeScript support
+- ⚡️ **Ready to Use** - No complex configuration, start developing quickly
+- 🛠️ **Rich Components** - Built-in business components and theme configuration options
+- 📋 **Convention-based Routing** - Automated file routing system, Next.js-like development experience
+- 🎨 **Theme System** - Dark mode, multiple theme colors, layout configurations
+- 🌍 **Internationalization** - Complete i18n solution with multi-language support
+- 🔐 **Permission Management** - Role-based access control system (RBAC)
+- 📱 **Responsive Design** - Perfect adaptation for mobile and desktop
+- 🎯 **Optimistic UI** - Automatic error capture with friendly error interfaces, component-level monitoring
+- 🔧 **CLI Tools** - Built-in command-line tools (Git commit standards, code cleanup, version release, etc.)
+- ⚙️ **Keep-Alive** - Page caching functionality for better UX
+- 🎭 **Animation System** - Smooth animations based on Motion
+
+### Monorepo Architecture
+
+The project uses pnpm workspace management with the following packages:
+
+- 📡 **@sa/axios** - HTTP request library with interceptors and error handling
+- 🎨 **@sa/color** - Theme color processing utilities
+- 🪝 **@sa/hooks** - Common React Hooks collection (useRequest, useBoolean, useArray, etc.)
+- 🧩 **@sa/materials** - Common component library (AdminLayout, PageTab, SimpleScrollbar, etc.)
+- 🛠️ **@sa/scripts** - Command-line toolkit (code generation, Git tools, release tools, etc.)
+- 🔧 **@sa/utils** - Common utility functions
+- 🎯 **@sa/uno-preset** - UnoCSS custom preset configuration
 
 Whether you're learning the latest frontend technologies or developing enterprise-grade admin panels, React SkyrocAdmin is your ideal choice.
 
@@ -49,9 +66,25 @@ Whether you're learning the latest frontend technologies or developing enterpris
 
 Both branches will continue to receive bug fixes. If you need the older version, switch to the appropriate branch. The `v18-router6` branch will remain advanced and feature-rich for 3-5 years.
 
-## Versions
+## Version Information
 
-### React Version
+Current Version: **v2.1.2**
+
+### Tech Stack Versions
+
+| Technology | Version | Description |
+|------------|---------|-------------|
+| React | 19.0.0 | Core framework |
+| React Router | 7.2.0 | Routing management |
+| Redux Toolkit | 2.5.1 | State management |
+| Ant Design | 5.24.1 | UI component library |
+| Vite | 6.1.1 | Build tool |
+| TypeScript | 5.7.3 | Type system |
+| UnoCSS | 66.0.0 | Atomic CSS |
+| Motion | 12.4.7 | Animation library |
+| pnpm | 10.4.1 | Package manager |
+
+### Live Preview
 
 - **React19 Version:**
   - [Preview](https://skyroc-admin.com/)
@@ -59,9 +92,9 @@ Both branches will continue to receive bug fixes. If you need the older version,
   - [GitHub Repository](https://github.com/Ohh-889/skyroc-admin)
   - [Gitee Repository](https://gitee.com/sjgk_dl/react-admin)
 
-#### Documentation
+### Documentation
 
-- [Docs](https://admin-docs.skyroc.me)
+- [Online Docs](https://admin-docs.skyroc.me) - Comprehensive Ant Design-themed documentation
 
 ### Vue Versions
 
@@ -103,41 +136,195 @@ Both branches will continue to receive bug fixes. If you need the older version,
 ![](https://soybeanjs-1300612522.cos.ap-guangzhou.myqcloud.com/uPic/soybean-admin-v1-10.png)
 ![](https://soybeanjs-1300612522.cos.ap-guangzhou.myqcloud.com/uPic/soybean-admin-v1-mobile.png)
 
-## Usage
+## Project Structure
+
+```
+soybean-admin-react/
+├── build/                    # Build configuration
+│   ├── config/              # Vite config (proxy, time, etc.)
+│   ├── optimize/            # Build optimization config
+│   └── plugins/             # Vite plugin configuration
+├── packages/                # Monorepo packages
+│   ├── axios/              # HTTP request wrapper
+│   ├── color/              # Color utilities
+│   ├── hooks/              # React Hooks collection
+│   ├── materials/          # Common components library
+│   ├── scripts/            # CLI tools
+│   ├── uno-preset/         # UnoCSS preset
+│   └── utils/              # Utility functions
+├── src/
+│   ├── assets/             # Static resources
+│   ├── components/         # Global components
+│   ├── constants/          # Constant definitions
+│   ├── features/           # Feature modules
+│   │   ├── auth/          # Authentication module
+│   │   ├── theme/         # Theme module
+│   │   ├── router/        # Router module
+│   │   ├── menu/          # Menu module
+│   │   ├── tab/           # Tab module
+│   │   ├── lang/          # i18n module
+│   │   └── ...
+│   ├── hooks/              # Business Hooks
+│   ├── layouts/            # Layout components
+│   ├── locales/            # i18n configuration
+│   ├── pages/              # Page components (convention-based routing)
+│   │   ├── (base)/        # Base layout pages
+│   │   ├── (blank)/       # Blank layout pages
+│   │   └── _builtin/      # Built-in pages
+│   ├── router/             # Router configuration
+│   ├── service/            # API services
+│   ├── store/              # Redux state management
+│   ├── styles/             # Global styles
+│   ├── theme/              # Theme configuration
+│   ├── types/              # TypeScript type definitions
+│   └── utils/              # Utility functions
+└── ...config files
+```
+
+## Getting Started
 
 ### Prerequisites
 
 Ensure your environment meets the following requirements:
 
-- **git**: For cloning and managing the project.
-- **NodeJS**: >=18.12.0, recommended 18.19.0 or higher.
-- **pnpm**: >= 8.7.0, recommended 8.14.0 or higher.
+- **git**: For cloning and managing the project
+- **Node.js**: >=18.12.0, recommended 18.19.0 or higher
+- **pnpm**: >= 8.7.0, recommended 10.4.1 or higher
 
-### Clone the Repository
+### Installation Steps
+
+1. **Clone the repository**
 
 ```bash
 git clone https://github.com/Ohh-889/skyroc-admin.git
+cd skyroc-admin
 ```
 
-### Install Dependencies
+2. **Install dependencies**
 
 ```bash
 pnpm i
 ```
 
-> Since the project uses pnpm monorepo management, please do not use npm or yarn to install dependencies.
+> ⚠️ Since the project uses pnpm monorepo management, please do not use npm or yarn to install dependencies.
 
-### Start Development Server
+3. **Start development server**
 
 ```bash
 pnpm dev
 ```
 
-### Build Project
+The development server will start at `http://localhost:9527`
+
+4. **Build for production**
 
 ```bash
+# Production build
 pnpm build
+
+# Test environment build
+pnpm build:test
 ```
+
+### Available Commands
+
+```bash
+# Type checking
+pnpm typecheck
+
+# Code formatting and fixing
+pnpm lint
+
+# Git commit (with standards)
+pnpm commit
+
+# Generate routes
+pnpm gen-route
+
+# Clean cache and dependencies
+pnpm cleanup
+
+# Release version
+pnpm release
+
+# Preview build
+pnpm preview
+```
+
+## Core Features
+
+### 🎨 Theme System
+
+- **Multiple Theme Colors**: Built-in theme colors with custom color support
+- **Dark Mode**: Complete dark mode support with system theme adaptation
+- **Layout Modes**: Vertical, horizontal, mixed, and more layout modes
+- **Theme Configuration**: Visual theme configuration panel with live preview
+- **Config Export**: Support for theme configuration export and import
+
+### 🔐 Permission Management
+
+- **Role-based Permissions**: RBAC-based role permission control
+- **Menu Permissions**: Dynamic menu generation based on user roles
+- **Button Permissions**: Fine-grained button-level permission control
+- **Route Guards**: Comprehensive route guards and permission validation
+- **Dynamic Routes**: Support for dynamic route addition based on permissions
+
+### 🛤️ Routing System
+
+- **Convention-based Routing**: Automatic route generation based on file system
+- **Dynamic Routes**: Support for dynamic parameter routes like `[id]`, `[...slug]`
+- **Route Caching**: Keep-Alive page caching functionality
+- **Route Animations**: Page transition animation effects
+- **Breadcrumbs**: Automatic breadcrumb navigation generation
+- **Route Meta**: Rich route metadata configuration
+
+### 📱 Tab System
+
+- **Multi-tabs**: Chrome-style multi-tab management
+- **Context Menu**: Close, refresh, pin, and other operations
+- **Tab Drag**: Support for tab drag and drop sorting
+- **Tab Caching**: Tab state persistence
+- **Quick Actions**: Close others, close left, close right, etc.
+
+### 🌍 Internationalization
+
+- **Multi-language**: Support for Chinese, English, and more
+- **Dynamic Switching**: Real-time language switching without refresh
+- **Antd Integration**: Complete Antd component internationalization
+- **Dayjs Integration**: Date and time internationalization support
+
+### 📡 HTTP Requests
+
+- **Axios Wrapper**: Complete request interception and response handling
+- **Error Handling**: Unified error handling mechanism
+- **Token Refresh**: Automatic token refresh mechanism
+- **Request Cancellation**: Support for request cancellation and duplicate request filtering
+- **useRequest**: Powerful request Hook with caching, polling, debounce, throttle, and more
+
+### 🎭 Component Library
+
+Built-in rich business components:
+
+- **SystemLogo**: System logo component
+- **ButtonIcon**: Icon button component
+- **SvgIcon**: SVG icon component
+- **DarkModeContainer**: Dark mode container
+- **FullScreen**: Full-screen toggle component
+- **BetterScroll**: Enhanced scroll component
+- **ErrorBoundary**: Error boundary component
+- **NumberTicker**: Number scrolling animation
+- **TypingAnimation**: Typewriter animation
+- **WaveBg**: Wave background animation
+- And more...
+
+### 🛠️ Development Tools
+
+- **ESLint**: Code quality checking
+- **TypeScript**: Complete type checking
+- **Git Hooks**: Pre-commit automatic checks
+- **Conventional Commits**: Standardized commit messages
+- **CLI Tools**: Built-in command-line toolkit
+- **Vite Inspector**: Development debugging tool
 
 ## Contribution
 

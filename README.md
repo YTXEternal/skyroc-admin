@@ -19,26 +19,43 @@
 
 [`React SkyrocAdmin`](https://github.com/Ohh-889/skyroc-admin) 是一个基于 React19 技术栈的清新优雅中后台模版。项目采用了最新的前端技术栈:
 
-- 🚀 React 19 + ReactRouter V7 + Redux/toolkit
-- 🎨 Ant Design + UnoCSS
-- 📦 Vite 6 + TypeScript
-- 🔐 基于角色的权限管理
-- 📱 移动端适配
-- 🌍 国际化支持
-- 🎯 Mock 数据方案
-- 📚 详尽的文档支持
+### 核心技术栈
 
-项目特点:
+- 🚀 **React 19** - 最新的 React 版本，享受最前沿的特性
+- 🛤️ **React Router V7** - 强大的路由管理系统
+- 📦 **Redux Toolkit** - 现代化的状态管理方案
+- 🎨 **Ant Design 5.24** - 企业级 UI 组件库
+- ⚡️ **Vite 6** - 极速的开发构建工具
+- 🎯 **TypeScript 5.7** - 完善的类型系统
+- 🌈 **UnoCSS** - 高性能的原子化 CSS 引擎
+- 📦 **pnpm monorepo** - 高效的包管理方案
 
-- 💡 代码规范严谨,架构清晰优雅
-- ⚡️ 开箱即用,无需复杂配置
-- 🛠️ 丰富的组件和主题配置
-- 📋 自动化的文件路由系统
-- 🔧 完善的类型支持
-- 📱 响应式设计,完美适配移动端
-- 🎨 乐观`UI` 项目出现错误自动捕获错误,并显示友好界面,帮助用户快速定位和解决问题,还可以再组件内监控埋点上报。
-- 🚀 丰富的路由功能：基于 React-Router V7 扩展了路由 API，提供类似 Next.js一样的约定式文件路由，也可以自己添加复用路由。
-- ⚡️ 命令行工具：内置高效的命令行工具，git提交、删除文件、发布等。
+### 项目特点
+
+- 💡 **代码质量** - 代码规范严谨，架构清晰优雅，完善的 TypeScript 类型支持
+- ⚡️ **开箱即用** - 无需复杂配置，快速启动项目开发
+- 🛠️ **丰富组件** - 内置大量业务组件和主题配置选项
+- 📋 **约定式路由** - 自动化的文件路由系统，类似 Next.js 的开发体验
+- 🎨 **主题系统** - 支持暗黑模式、多主题色、布局配置等
+- 🌍 **国际化** - 完整的 i18n 方案，支持多语言切换
+- 🔐 **权限管理** - 基于角色的权限控制系统（RBAC）
+- 📱 **响应式设计** - 完美适配移动端和桌面端
+- 🎯 **乐观 UI** - 自动错误捕获和友好的错误界面，支持组件级监控埋点
+- 🔧 **CLI 工具** - 内置命令行工具（Git 提交规范、代码清理、版本发布等）
+- ⚙️ **Keep-Alive** - 页面缓存功能，提升用户体验
+- 🎭 **动画效果** - 基于 Motion 的流畅动画系统
+
+### Monorepo 架构
+
+项目采用 pnpm workspace 管理，包含以下子包：
+
+- 📡 **@sa/axios** - 封装的 HTTP 请求库，支持拦截器、错误处理等
+- 🎨 **@sa/color** - 主题颜色处理工具库
+- 🪝 **@sa/hooks** - 常用 React Hooks 集合（useRequest、useBoolean、useArray 等）
+- 🧩 **@sa/materials** - 通用组件库（AdminLayout、PageTab、SimpleScrollbar 等）
+- 🛠️ **@sa/scripts** - 命令行工具集（代码生成、Git 工具、发布工具等）
+- 🔧 **@sa/utils** - 通用工具函数库
+- 🎯 **@sa/uno-preset** - UnoCSS 自定义预设配置
 
 无论是学习最新前端技术,还是开发企业级中后台项目,React SkyrocAdmin 都是您的不二之选。
 
@@ -49,19 +66,35 @@
 
 有问题都是会进行修复,如果需要使用旧版本,请切换到对应分支。 v18-router6 在未来3-5年依然会是市面上较为先进 功能强大的版本
 
-## 版本
+## 版本信息
 
-### React版本
+当前版本：**v2.1.2**
+
+### 技术栈版本
+
+| 技术 | 版本 | 说明 |
+|------|------|------|
+| React | 19.0.0 | 核心框架 |
+| React Router | 7.2.0 | 路由管理 |
+| Redux Toolkit | 2.5.1 | 状态管理 |
+| Ant Design | 5.24.1 | UI 组件库 |
+| Vite | 6.1.1 | 构建工具 |
+| TypeScript | 5.7.3 | 类型系统 |
+| UnoCSS | 66.0.0 | 原子化 CSS |
+| Motion | 12.4.7 | 动画库 |
+| pnpm | 10.4.1 | 包管理器 |
+
+### 在线预览
 
 - **React19 版本:**
   - [预览地址](https://skyroc-admin.com/)
-  - [国内加速访问]( https://skyroc-admin.pages.dev/)
+  - [国内加速访问](https://skyroc-admin.pages.dev/)
   - [Github 仓库](https://github.com/Ohh-889/skyroc-admin)
   - [Gitee 仓库](https://gitee.com/sjgk_dl/react-admin)
 
-#### 文档
+### 文档
 
-- [地址](https://admin-docs.skyroc.me)
+- [在线文档](https://admin-docs.skyroc.me) - 详尽的 Ant Design 风格文档
 
 ### Vue版本
 
@@ -104,41 +137,195 @@
 ![](https://soybeanjs-1300612522.cos.ap-guangzhou.myqcloud.com/uPic/soybean-admin-v1-10.png)
 ![](https://soybeanjs-1300612522.cos.ap-guangzhou.myqcloud.com/uPic/soybean-admin-v1-mobile.png)
 
-## 使用
+## 项目结构
 
-**环境准备**
+```
+soybean-admin-react/
+├── build/                    # 构建配置
+│   ├── config/              # Vite 配置（代理、时间等）
+│   ├── optimize/            # 构建优化配置
+│   └── plugins/             # Vite 插件配置
+├── packages/                # Monorepo 子包
+│   ├── axios/              # HTTP 请求封装
+│   ├── color/              # 颜色工具
+│   ├── hooks/              # React Hooks 集合
+│   ├── materials/          # 通用组件库
+│   ├── scripts/            # CLI 工具
+│   ├── uno-preset/         # UnoCSS 预设
+│   └── utils/              # 工具函数库
+├── src/
+│   ├── assets/             # 静态资源
+│   ├── components/         # 全局组件
+│   ├── constants/          # 常量定义
+│   ├── features/           # 功能模块
+│   │   ├── auth/          # 认证模块
+│   │   ├── theme/         # 主题模块
+│   │   ├── router/        # 路由模块
+│   │   ├── menu/          # 菜单模块
+│   │   ├── tab/           # 标签页模块
+│   │   ├── lang/          # 国际化模块
+│   │   └── ...
+│   ├── hooks/              # 业务 Hooks
+│   ├── layouts/            # 布局组件
+│   ├── locales/            # 国际化配置
+│   ├── pages/              # 页面组件（约定式路由）
+│   │   ├── (base)/        # 基础布局页面
+│   │   ├── (blank)/       # 空白布局页面
+│   │   └── _builtin/      # 内置页面
+│   ├── router/             # 路由配置
+│   ├── service/            # API 服务
+│   ├── store/              # Redux 状态管理
+│   ├── styles/             # 全局样式
+│   ├── theme/              # 主题配置
+│   ├── types/              # TypeScript 类型定义
+│   └── utils/              # 工具函数
+└── ...配置文件
+```
+
+## 快速开始
+
+### 环境准备
 
 确保你的环境满足以下要求：
 
-- **git**: 你需要git来克隆和管理项目版本。
-- **NodeJS**: >=18.12.0，推荐 18.19.0 或更高。
-- **pnpm**: >= 8.7.0，推荐 8.14.0 或更高。
+- **git**: 用于克隆和管理项目版本
+- **Node.js**: >=18.12.0，推荐 18.19.0 或更高
+- **pnpm**: >= 8.7.0，推荐 10.4.1 或更高
 
-**克隆项目**
+### 安装步骤
+
+1. **克隆项目**
 
 ```bash
 git clone https://github.com/Ohh-889/skyroc-admin.git
+cd skyroc-admin
 ```
 
-**安装依赖**
+2. **安装依赖**
 
 ```bash
 pnpm i
 ```
 
-> 由于本项目采用了 pnpm monorepo 的管理方式，因此请不要使用 npm 或 yarn 来安装依赖。
+> ⚠️ 由于本项目采用了 pnpm monorepo 的管理方式，请不要使用 npm 或 yarn 来安装依赖。
 
-**启动项目**
+3. **启动开发服务器**
 
 ```bash
 pnpm dev
 ```
 
-**构建项目**
+开发服务器将在 `http://localhost:9527` 启动
+
+4. **构建生产版本**
 
 ```bash
+# 生产环境构建
 pnpm build
+
+# 测试环境构建
+pnpm build:test
 ```
+
+### 其他可用命令
+
+```bash
+# 类型检查
+pnpm typecheck
+
+# 代码格式化和修复
+pnpm lint
+
+# Git 提交（符合规范）
+pnpm commit
+
+# 路由生成
+pnpm gen-route
+
+# 清理缓存和依赖
+pnpm cleanup
+
+# 版本发布
+pnpm release
+
+# 预览构建产物
+pnpm preview
+```
+
+## 核心功能
+
+### 🎨 主题系统
+
+- **多主题色**: 内置多种主题颜色，支持自定义主题色
+- **暗黑模式**: 完整的暗黑模式支持，自动适配系统主题
+- **布局模式**: 支持垂直、水平、混合等多种布局模式
+- **主题配置**: 可视化的主题配置面板，实时预览
+- **配置导出**: 支持主题配置的导出和导入
+
+### 🔐 权限管理
+
+- **角色权限**: 基于 RBAC 的角色权限控制
+- **菜单权限**: 根据用户角色动态生成菜单
+- **按钮权限**: 细粒度的按钮级权限控制
+- **路由守卫**: 完善的路由前置守卫和权限验证
+- **动态路由**: 支持根据权限动态添加路由
+
+### 🛤️ 路由系统
+
+- **约定式路由**: 基于文件系统的自动路由生成
+- **动态路由**: 支持动态参数路由 `[id]`、`[...slug]` 等
+- **路由缓存**: Keep-Alive 页面缓存功能
+- **路由动画**: 页面切换动画效果
+- **面包屑**: 自动生成面包屑导航
+- **路由元信息**: 丰富的路由元数据配置
+
+### 📱 标签页系统
+
+- **多标签页**: Chrome 风格的多标签页管理
+- **右键菜单**: 关闭、刷新、固定等操作
+- **标签拖拽**: 支持标签页拖拽排序
+- **标签缓存**: 标签页状态持久化
+- **快捷操作**: 关闭其他、关闭左侧、关闭右侧等
+
+### 🌍 国际化
+
+- **多语言**: 支持中文、英文等多语言
+- **动态切换**: 语言实时切换，无需刷新
+- **Antd 集成**: 完整的 Antd 组件国际化
+- **Dayjs 集成**: 日期时间国际化支持
+
+### 📡 HTTP 请求
+
+- **Axios 封装**: 完善的请求拦截和响应处理
+- **错误处理**: 统一的错误处理机制
+- **Token 刷新**: 自动 Token 刷新机制
+- **请求取消**: 支持请求取消和重复请求过滤
+- **useRequest**: 强大的请求 Hook，支持缓存、轮询、防抖、节流等
+
+### 🎭 组件库
+
+项目内置了丰富的业务组件：
+
+- **SystemLogo**: 系统 Logo 组件
+- **ButtonIcon**: 图标按钮组件
+- **SvgIcon**: SVG 图标组件
+- **DarkModeContainer**: 暗黑模式容器
+- **FullScreen**: 全屏切换组件
+- **BetterScroll**: 增强滚动组件
+- **ErrorBoundary**: 错误边界组件
+- **NumberTicker**: 数字滚动动画
+- **TypingAnimation**: 打字机动画
+- **WaveBg**: 波浪背景动画
+- 以及更多...
+
+### 🛠️ 开发工具
+
+- **ESLint**: 代码质量检查
+- **TypeScript**: 完整的类型检查
+- **Git Hooks**: 提交前自动检查
+- **Conventional Commits**: 规范的提交信息
+- **CLI 工具**: 内置命令行工具集
+- **Vite Inspector**: 开发调试工具
 
 ## 如何贡献
 
