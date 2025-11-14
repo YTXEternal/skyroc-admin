@@ -19,16 +19,15 @@ export function getAuthorization() {
  */
 export async function handleRefreshToken() {
   const refreshToken = localStg.get('refreshToken') || '';
-  const { data, error } = await fetchRefreshToken(refreshToken);
-  if (!error) {
+  try {
+    const data = await fetchRefreshToken(refreshToken);
     localStg.set('token', data.token);
     localStg.set('refreshToken', data.refreshToken);
     return true;
+  } catch {
+    router.navigate('/login-out');
+    return false;
   }
-
-  router.navigate('/login-out');
-
-  return false;
 }
 
 export async function handleExpiredRequest(state: RequestInstanceState) {

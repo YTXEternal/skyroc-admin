@@ -1,93 +1,96 @@
 /**
- * Namespace Api.SystemManage
+ * 命名空间 Api.SystemManage
  *
- * Backend api module: "systemManage"
+ * 后端 API 模块：系统管理模块
  */
 declare namespace Api {
   namespace SystemManage {
+    /** 通用搜索参数 */
     type CommonSearchParams = Pick<Common.PaginatingCommonParams, 'current' | 'size'>;
 
-    /** role */
+    /** 角色 */
     type Role = Common.CommonRecord<{
-      /** role code */
+      /** 角色编码 */
       roleCode: string;
-      /** role description */
+      /** 角色描述 */
       roleDesc: string;
-      /** role name */
+      /** 角色名称 */
       roleName: string;
     }>;
 
-    /** role search params */
+    /** 角色搜索参数 */
     type RoleSearchParams = CommonType.RecordNullable<
       Pick<Api.SystemManage.Role, 'roleCode' | 'roleName' | 'status'> & CommonSearchParams
     >;
 
-    /** role list */
+    /** 角色列表 */
     type RoleList = Common.PaginatingQueryRecord<Role>;
 
-    /** all role */
+    /** 所有角色（简化版） */
     type AllRole = Pick<Role, 'id' | 'roleCode' | 'roleName'>;
 
     /**
-     * user gender
+     * 用户性别
      *
-     * - "1": male
-     * - "2": female
+     * - "1": 男
+     * - "2": 女
      */
     type UserGender = import('../enums').UserGenderValue;
 
-    /** user */
+    /** 用户 */
     type User = Common.CommonRecord<{
-      /** user nick name */
+      /** 用户昵称 */
       nickName: string;
-      /** user email */
+      /** 用户邮箱 */
       userEmail: string;
-      /** user gender */
+      /** 用户性别 */
       userGender: UserGender | null;
-      /** user name */
+      /** 用户名 */
       userName: string;
-      /** user phone */
+      /** 用户手机号 */
       userPhone: string;
-      /** user role code collection */
+      /** 用户角色编码集合 */
       userRoles: string[];
     }>;
 
-    /** user search params */
+    /** 用户搜索参数 */
     type UserSearchParams = CommonType.RecordNullable<
       Pick<Api.SystemManage.User, 'nickName' | 'status' | 'userEmail' | 'userGender' | 'userName' | 'userPhone'> &
         CommonSearchParams
     >;
 
-    /** user list */
+    /** 用户列表 */
     type UserList = Common.PaginatingQueryRecord<User>;
 
     /**
-     * menu type
+     * 菜单类型
      *
-     * - "1": directory
-     * - "2": menu
+     * - "1": 目录
+     * - "2": 菜单
      */
     type MenuType = import('../enums').MenuTypeValue;
 
+    /** 菜单按钮 */
     type MenuButton = {
       /**
-       * button code
+       * 按钮编码
        *
-       * it can be used to control the button permission
+       * 可用于控制按钮权限
        */
       code: string;
-      /** button description */
+      /** 按钮描述 */
       desc: string;
     };
 
     /**
-     * icon type
+     * 图标类型
      *
-     * - "1": iconify icon
-     * - "2": local icon
+     * - "1": iconify 图标
+     * - "2": 本地图标
      */
     type IconType = import('../enums').IconTypeValue;
 
+    /** 菜单的路由属性 */
     type MenuPropsOfRoute = Pick<
       import('@soybean-react/vite-plugin-react-router').RouteMeta,
       | 'activeMenu'
@@ -102,37 +105,43 @@ declare namespace Api {
       | 'query'
     >;
 
+    /** 菜单 */
     type Menu = Common.CommonRecord<{
-      /** buttons */
+      /** 按钮列表 */
       buttons?: MenuButton[] | null;
-      /** children menu */
+      /** 子菜单 */
       children?: Menu[] | null;
-      /** component */
+      /** 组件路径 */
       component?: string;
-      /** iconify icon name or local icon name */
+      /** 图标名称（iconify 图标名或本地图标名） */
       icon: string;
-      /** icon type */
+      /** 图标类型 */
       iconType: IconType;
-      /** menu name */
+      /** 菜单名称 */
       menuName: string;
-      /** menu type */
+      /** 菜单类型 */
       menuType: MenuType;
-      /** parent menu id */
+      /** 父级菜单 ID */
       parentId: number;
-      /** route name */
+      /** 路由名称 */
       routeName: string;
-      /** route path */
+      /** 路由路径 */
       routePath: string;
     }> &
       MenuPropsOfRoute;
 
-    /** menu list */
+    /** 菜单列表 */
     type MenuList = Common.PaginatingQueryRecord<Menu>;
 
+    /** 菜单树 */
     type MenuTree = {
+      /** 子菜单树 */
       children?: MenuTree[];
+      /** 菜单 ID */
       id: number;
+      /** 菜单标签 */
       label: string;
+      /** 父级菜单 ID */
       pId: number;
     };
   }

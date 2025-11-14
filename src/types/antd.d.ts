@@ -21,7 +21,7 @@ declare namespace AntDesign {
 
   type TableApiFn<T = any, R = Api.Common.CommonSearchParams> = (
     params: R
-  ) => Promise<FlatResponseData<Api.Common.PaginatingQueryRecord<T>>>;
+  ) => Promise<App.Service.Response<Api.Common.PaginatingQueryRecord<T>>['data']>;
 
   /**
    * the type of table operation
