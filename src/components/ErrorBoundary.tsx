@@ -8,6 +8,7 @@ import { $t } from '../locales';
 const { Text, Title } = Typography;
 
 const theme = globalConfig.defaultThemeColor;
+
 const ErrorPage = ({ error, resetErrorBoundary }: FallbackProps) => {
   // 可以在这里根据不同的业务逻辑处理错误或者上报给日志服务
 

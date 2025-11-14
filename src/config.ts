@@ -4,6 +4,7 @@ import type { WatermarkProps } from 'antd';
 import { themeSettings } from './theme/settings';
 import { isPC } from './utils/agent';
 import { getServiceBaseURL } from './utils/service';
+import { localStg } from './utils/storage';
 
 const isDev = import.meta.env.DEV;
 
@@ -29,6 +30,17 @@ class GlobalConfig {
       label: 'English'
     }
   ];
+
+  constructor() {
+    /** - 初始化默认主题颜色 */
+    this._defaultThemeColor = localStg.get('themeColor') || themeSettings.themeColor;
+
+    /** - 初始化默认语言 */
+    this._defaultLang = localStg.get('lang') || this._defaultLang;
+
+    /** - 初始化默认暗色模式 */
+    this._defaultDarkMode = localStg.get('darkMode') || this._defaultDarkMode;
+  }
 
   /** - 首页路径 */
   private _homePath = import.meta.env.VITE_ROUTE_HOME;

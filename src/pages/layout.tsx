@@ -4,8 +4,13 @@ import type { ShouldRevalidateFunctionArgs } from 'react-router-dom';
 
 import { usePrevious, useRoute } from '@/features/router';
 import { allRoutes } from '@/router';
+import { fetchGetUserInfo } from '@/service/api/auth.ts';
 import { useUserInfo } from '@/service/hooks';
+import { QUERY_KEYS } from '@/service/keys/index.ts';
+import { queryClient } from '@/service/queryClient';
 import { localStg } from '@/utils/storage';
+
+const hasToken = Boolean(localStg.get('token'));
 
 function handleRouteSwitch(to: Router.Route, from: Router.Route | null) {
   // route with href
@@ -124,8 +129,15 @@ const RootLayout = () => {
   );
 };
 
-export const loader = () => {
+export const loader = async () => {
   window.NProgress?.start?.();
+
+  if (hasToken) {
+    await queryClient.prefetchQuery({
+      queryFn: fetchGetUserInfo,
+      queryKey: QUERY_KEYS.AUTH.USER_INFO
+    });
+  }
 
   return null;
 };
