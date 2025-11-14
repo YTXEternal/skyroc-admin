@@ -1,4 +1,4 @@
-import { BACKEND_ERROR_CODE, createFlatRequest, createRequest } from '@sa/axios';
+import { BACKEND_ERROR_CODE, createRequest } from '@sa/axios';
 
 import { globalConfig } from '@/config';
 import { localStg } from '@/utils/storage';
@@ -7,7 +7,7 @@ import { backEndFail, handleError } from './error';
 import { getAuthorization } from './shared';
 import type { RequestInstanceState } from './type';
 
-export const request = createFlatRequest<App.Service.Response, RequestInstanceState>(
+export const request = createRequest<App.Service.Response, RequestInstanceState>(
   {
     baseURL: globalConfig.serviceBaseURL,
     headers: {

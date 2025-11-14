@@ -1,4 +1,4 @@
-import type { FlatRequestInstance } from '@sa/axios';
+import type { RequestInstance } from '@sa/axios';
 import { BACKEND_ERROR_CODE } from '@sa/axios';
 import type { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 
@@ -12,7 +12,7 @@ import type { RequestInstanceState } from './type';
 export async function backEndFail(
   response: AxiosResponse<App.Service.Response<unknown>, any>,
   instance: AxiosInstance,
-  request: FlatRequestInstance<RequestInstanceState, App.Service.Response<unknown>>
+  request: RequestInstance<RequestInstanceState>
 ) {
   const responseCode = String(response.data.code);
 
@@ -80,7 +80,7 @@ export async function backEndFail(
 /** - 网络错误处理 */
 export function handleError(
   error: AxiosError<App.Service.Response<unknown>, any>,
-  request: FlatRequestInstance<RequestInstanceState, App.Service.Response<unknown>>
+  request: RequestInstance<RequestInstanceState>
 ) {
   // when the request is fail, you can show error message
 
