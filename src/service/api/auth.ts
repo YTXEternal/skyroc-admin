@@ -4,15 +4,11 @@ import { AUTH_URLS } from '../urls';
 /**
  * Login
  *
- * @param userName User name
- * @param password Password
+ * @param params Login parameters
  */
-export function fetchLogin(userName: string, password: string) {
-  return request<Api.Auth.LoginToken>({
-    data: {
-      password,
-      userName
-    },
+export function fetchLogin(params: Api.Auth.LoginParams) {
+  return request<Api.Auth.LoginResponse>({
+    data: params,
     method: 'post',
     url: AUTH_URLS.LOGIN
   });
