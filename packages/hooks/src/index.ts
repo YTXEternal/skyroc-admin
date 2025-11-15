@@ -1,7 +1,6 @@
 import useBoolean from './use-boolean';
 import useCountDownTimer from './use-count-down';
 import useLoading from './use-loading';
-import useRequest from './use-request';
 import useSvgIconRender from './use-svg-icon-render';
 import useHookTable from './use-table';
 
@@ -11,4 +10,4 @@ export * from './use-emitter';
 
 export * from './use-table';
 
-export { useBoolean, useCountDownTimer, useHookTable, useLoading, useRequest, useSvgIconRender };
+export { useBoolean, useCountDownTimer, useHookTable, useLoading, useSvgIconRender };
