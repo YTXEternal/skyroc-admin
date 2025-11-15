@@ -1,3 +1,5 @@
+import { HorizontalMenuMode } from '../types';
+
 import Horizontal from './Horizontal';
 import Vertical from './Vertical';
 
@@ -7,7 +9,7 @@ const ReversedHorizontalMix = () => {
 
     <Horizontal
       key="ReversedHorizontalMix "
-      mode="3"
+      mode={HorizontalMenuMode.FirstLevel}
     />
   ];
 };

@@ -5,8 +5,11 @@ import { useMixMenuContext } from '@/features/menu';
 import { useRouter } from '@/features/router';
 import { getThemeSettings } from '@/features/theme';
 
+import { HorizontalMenuMode } from '../types';
+
 interface Props {
-  mode: '1' | '2' | '3';
+  /** 水平菜单显示模式 */
+  mode: HorizontalMenuMode;
 }
 
 function isHasChildren(menus: App.Global.Menu[], key: string) {
@@ -20,19 +23,19 @@ const HorizontalMenu: FC<Props> = memo(({ mode }) => {
 
   const { navigate } = useRouter();
 
-  const selectedKeys = mode === '3' ? [`/${selectKey[0].split('/')[1]}`] : selectKey;
+  const selectedKeys = mode === HorizontalMenuMode.FirstLevel ? [`/${selectKey[0].split('/')[1]}`] : selectKey;
 
   function getMenus() {
-    if (mode === '1') {
+    if (mode === HorizontalMenuMode.All) {
       return allMenus;
-    } else if (mode === '2') {
+    } else if (mode === HorizontalMenuMode.Child) {
       return childLevelMenus;
     }
     return firstLevelMenu;
   }
 
   function handleClickMenu(menuInfo: MenuInfo) {
-    if (mode === '3' && isHasChildren(allMenus, menuInfo.key)) {
+    if (mode === HorizontalMenuMode.FirstLevel && isHasChildren(allMenus, menuInfo.key)) {
       setActiveFirstLevelMenuKey(menuInfo.key);
     } else {
       navigate(menuInfo.key);
