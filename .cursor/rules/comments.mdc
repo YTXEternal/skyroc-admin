@@ -1,32 +1,70 @@
 ---
-description: Commenting and documentation style
+description: React component conventions for Skyroc Admin
 globs:
-  - "**/*"
-alwaysApply: false
+  - "src/components/**"
+  - "src/features/**"
+  - "src/layouts/**"
+  - "src/pages/**"
+alwaysApply: true
 ---
-# 注释规范 Comment Style
+# 组件开发规范 Component Guidelines
 
-## 总体要求
-- 以 **简洁的英文描述** 为主，必要时补充中文解释（尤其是业务背景或注意事项）。
-- 使用 JSDoc 风格的块注释 `/** ... */` 描述函数、hook、类型或复杂逻辑。
-- 单行注释 `//` 用于行内说明或临时标记，提交前清理无用的调试注释。
+## 通用原则
+- **函数式组件 + Hooks**：所有 UI 使用函数式组件，遵循 React 19 的写法。以箭头函数定义组件并导出（单组件默认导出，组合导出使用命名导出）。
+- **按需拆分**：优先将业务逻辑沉入 `src/features/<domain>`，页面只组织展示与组合。
+- **稳定的依赖顺序**：导入顺序建议为：React/库 → 三方 hooks → `@sa/*` 包 → `@/` 别名模块 → 相对路径资源 → 样式文件。
+- **受控 props**：Props 接口应显式声明，必要时提供 `Partial<>` 或默认值。避免在 props 上写 `any`。
 
-## 推荐模板
-```ts
-/**
- * Describe what the function does.
- *
- * @param params - Describe parameter meaning
- * @returns Explain the return value
- */
-export function fetchSomething(params: ParamsType) {
-  // Additional inline notes go here
+## 状态与副作用
+- 本地 UI 状态使用 `useState`、或 ahooks，跨组件状态抽离到 Redux slice 或 TanStack Query。
+- 异步请求推荐：
+  - 表单/按钮类操作：`useMutation`。
+  - 数据展示：`useQuery`，在 `service/hooks` 中封装共享逻辑。
+- 副作用集中在 `useEffect`/`useLayoutEffect`，需要清理时返回 cleanup。避免在组件主体内直接访问 `window`，请放到自定义 hook。
+
+## 组合 UI
+- 使用 Ant Design 组件时，统一从 `antd` 导入并搭配 UnoCSS class 管理间距与布局。
+- 公共视觉效果（波浪背景、图标、翻牌数字等）收敛在 `src/components`，复用时传入语义化 props。
+- 通过 `src/components/ErrorBoundary.tsx` 和 `keepalive-for-react` 提供错误兜底与缓存。新页面若有潜在异常，请嵌入 `ErrorBoundary`。
+
+## 目录组织
+- 页面目录：
+  - `index.tsx` 或 `[id].tsx` 渲染核心内容。
+  - 局部子组件放在 `components/` 子目录。
+  - 页面级 hooks 放在 `hooks/` 子目录，命名 `useXxx.ts`。
+- Feature 模块：统一暴露 `index.ts`。在 `providers/`、`hooks/`、`components/` 等子目录中组织资源，避免跨域引用内部实现细节。
+
+## 示例
+```tsx
+import { Card } from 'antd';
+import { motion } from 'motion/react';
+import { useTranslation } from 'react-i18next';
+
+import { useAppSelector } from '@/hooks/business/useStore';
+import { getThemeSettings } from '@/features/theme';
+
+interface OverviewCardProps {
+  icon: string;
+  titleKey: string;
+  value: number;
 }
+
+const OverviewCard = ({ icon, titleKey, value }: OverviewCardProps) => {
+  const { t } = useTranslation();
+  const theme = useAppSelector(getThemeSettings);
+
+  return (
+    <Card className="flex flex-col gap-12px">
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+        <Icon icon={icon} className="text-icon" style={{ color: theme.themeColor }} />
+        <p className="text-16px font-500">{t(titleKey)}</p>
+        <span className="text-24px font-600">{value}</span>
+      </motion.div>
+    </Card>
+  );
+};
+
+export default OverviewCard;
 ```
 
-## 特殊场景
-- 国际化 key、接口字段等需要解释来源时，可使用 `/** key: description */` 的形式直接附在属性上。
-- Redux slice 中的状态属性使用块注释说明用途（参考 `routeStore` 的写法）。
-- 面对第三方库限制或 hack 时，务必在注释中写明原因与后续 TODO。
-
-保持注释与实现同步，避免过时信息误导后续开发者。
+该示例体现了：类型声明、路径别名、UnoCSS 类与动画库协同的推荐写法。
