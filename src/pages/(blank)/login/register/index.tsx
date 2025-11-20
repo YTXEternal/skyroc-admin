@@ -105,10 +105,4 @@ const Register = () => {
   );
 };
 
-export const handle = {
-  constant: true,
-  i18nKey: 'route.(blank)_login_register',
-  title: 'login_register'
-};
-
 export default Register;

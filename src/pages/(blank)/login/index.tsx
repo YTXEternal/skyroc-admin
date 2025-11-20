@@ -156,10 +156,4 @@ const PwdLogin = () => {
   );
 };
 
-export const handle = {
-  constant: true,
-  i18nKey: 'route.(blank)_login',
-  title: 'login'
-};
-
 export default PwdLogin;
