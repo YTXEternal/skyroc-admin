@@ -1,6 +1,17 @@
 # Changelog
 
 
+## [v2.2.2](https://github.com/Ohh-889/soybean-admin-react/compare/v2.2.1...v2.2.2) (2025-11-20)
+
+### &nbsp;&nbsp;&nbsp;💅 Refactors
+
+- **auth**: simplify user info prefetching by removing unnecessary await in queryClient call &nbsp;-&nbsp; by @SkyRoc1 [<samp>(2b77b)</samp>](https://github.com/Ohh-889/soybean-admin-react/commit/2b77b60)
+- **table**: add transformParams option to useTable and useHookTable for enhanced parameter handling &nbsp;-&nbsp; by @SkyRoc1 [<samp>(1680c)</samp>](https://github.com/Ohh-889/soybean-admin-react/commit/1680c37)
+
+### &nbsp;&nbsp;&nbsp;❤️ Contributors
+
+[![SkyRoc1](https://github.com/SkyRoc1.png?size=48)](https://github.com/SkyRoc1)&nbsp;&nbsp;
+
 ## [v2.2.1](https://github.com/Ohh-889/soybean-admin-react/compare/v2.2.0...v2.2.1) (2025-11-20)
 
 ### &nbsp;&nbsp;&nbsp;💅 Refactors
