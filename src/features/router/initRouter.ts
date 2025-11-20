@@ -40,6 +40,7 @@ export async function initAuthRoutes(addRoutes: (parent: string | null, route: R
     // 动态模式
     try {
       const data = await fetchGetUserRoutes();
+
       store.dispatch(setHomePath(data.home));
 
       const filteredRoutes = filterAuthRoutesByDynamic(reactAuthRoutes, data.routes);
