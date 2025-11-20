@@ -1,6 +1,23 @@
 # Changelog
 
 
+## [v2.2.3](https://github.com/Ohh-889/soybean-admin-react/compare/v2.2.2...v2.2.3) (2025-11-21)
+
+### &nbsp;&nbsp;&nbsp;🚀 Features
+
+- **auth**: clear query client cache on authentication reset to ensure fresh data retrieval &nbsp;-&nbsp; by @SkyRoc1 [<samp>(3239a)</samp>](https://github.com/Ohh-889/soybean-admin-react/commit/3239a1b)
+
+### &nbsp;&nbsp;&nbsp;💅 Refactors
+
+- **auth**: move user info prefetching logic to RootLayout and clean up App component &nbsp;-&nbsp; by @SkyRoc1 [<samp>(43c05)</samp>](https://github.com/Ohh-889/soybean-admin-react/commit/43c0506)
+- **main**: move setupI18n call to the end of setupApp function for improved initialization order &nbsp;-&nbsp; by @SkyRoc1 [<samp>(f29b4)</samp>](https://github.com/Ohh-889/soybean-admin-react/commit/f29b483)
+- **project**: remove unused handle exports from login, code-login, register, and error pages &nbsp;-&nbsp; by @SkyRoc1 [<samp>(d3d9e)</samp>](https://github.com/Ohh-889/soybean-admin-react/commit/d3d9e8f)
+- **router**: enhance route initialization and user info prefetching with improved caching strategy. close #70 &nbsp;-&nbsp; by @SkyRoc1 in https://github.com/Ohh-889/soybean-admin-react/issues/70 [<samp>(cf046)</samp>](https://github.com/Ohh-889/soybean-admin-react/commit/cf04659)
+
+### &nbsp;&nbsp;&nbsp;❤️ Contributors
+
+[![SkyRoc1](https://github.com/SkyRoc1.png?size=48)](https://github.com/SkyRoc1)&nbsp;&nbsp;
+
 ## [v2.2.2](https://github.com/Ohh-889/soybean-admin-react/compare/v2.2.1...v2.2.2) (2025-11-20)
 
 ### &nbsp;&nbsp;&nbsp;💅 Refactors

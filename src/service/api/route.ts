@@ -11,6 +11,11 @@ export function fetchGetUserRoutes() {
   return request<Api.Route.UserRoute>({ url: ROUTE_URLS.GET_USER_ROUTES });
 }
 
+/** get user routes */
+export function fetchGetVueUserRoutes() {
+  return request<Api.Route.UserRoute>({ url: '/route/getUserRoutes' });
+}
+
 /**
  * whether the route is exist
  *
