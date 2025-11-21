@@ -109,7 +109,10 @@ Current Version: **v2.4.0**
 
 ### Documentation
 
-- [Online Docs](https://admin-docs.skyroc.me) - Comprehensive Ant Design-themed documentation
+- **React19 (v2) Version:**
+  - [Online Docs](https://admin-docs.skyroc.me) - Comprehensive Ant Design-themed documentation
+- **React18 (v1) Version:**
+  - [Online Docs](https://admin-docsv1.skyroc.me) - v1 version documentation
 
 ### Vue Versions
 
