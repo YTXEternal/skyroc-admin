@@ -1,39 +1,66 @@
 import { SimpleScrollbar } from '@sa/materials';
+import type { DataNode } from 'antd/es/tree';
+import { useMemo } from 'react';
 
-import {
-  filterAndFlattenRoutes,
-  flattenLeafRoutes,
-  getBaseChildrenRoutes,
-  getFlatBaseRoutes
-} from '@/features/router/routes';
-import { allRoutes } from '@/router';
+import { useAllPages, useMenuTree } from '@/service/hooks/useSystemManage';
 
 import type { ModulesProps } from './type';
-
-const flatRoutes = flattenLeafRoutes(getBaseChildrenRoutes(allRoutes));
 
 const MenuAuthModal: FC<ModulesProps> = memo(({ onClose, open, roleId }) => {
   const { t } = useTranslation();
 
   const title = t('common.edit') + t('page.manage.role.menuAuth');
 
+  const { data: allPages = [], isLoading: isLoadingPages } = useAllPages();
+  const { data: menuTree = [], isLoading: isLoadingTree } = useMenuTree();
+
   const [home, setHome] = useState<string>();
+  const [checks, setChecks] = useState<number[]>();
 
-  const [checks, setChecks] = useState<string[]>();
+  // 将后端返回的页面列表转换为选项格式
+  const pageSelectOptions = useMemo(() => {
+    return allPages.map(page => ({
+      label: page,
+      value: page
+    }));
+  }, [allPages]);
 
-  const data = getFlatBaseRoutes(flatRoutes, t);
+  // 将后端返回的菜单树转换为 Ant Design Tree 需要的格式
+  const treeData = useMemo<DataNode[]>(() => {
+    function convertMenuTreeToDataNode(menu: Api.SystemManage.MenuTree): DataNode {
+      return {
+        children: menu.children?.map(convertMenuTreeToDataNode),
+        key: menu.id,
+        title: menu.label
+      };
+    }
 
-  const tree = filterAndFlattenRoutes(allRoutes[0].children || [], t);
+    return menuTree.map(convertMenuTreeToDataNode);
+  }, [menuTree]);
 
   async function getChecks() {
+    // request - 获取角色已选中的菜单项
+    // const { data } = await fetchGetRoleMenuAuth(roleId);
+    // setChecks(data.menuIds);
+
     console.log(roleId);
-    // request
-    setChecks(['/home']);
+    setChecks([]);
+  }
+
+  async function getHome() {
+    // request - 获取角色的首页
+    // const { data } = await fetchGetRoleHome(roleId);
+    // setHome(data.home);
+
+    console.log(roleId);
+    setHome('');
   }
 
   function handleSubmit() {
+    // request - 更新角色菜单权限
+    // await fetchUpdateRoleMenuAuth({ roleId, menuIds: checks, home });
+
     console.log(checks, roleId, home);
-    // request
 
     window.$message?.success?.(t('common.modifySuccess'));
 
@@ -41,9 +68,7 @@ const MenuAuthModal: FC<ModulesProps> = memo(({ onClose, open, roleId }) => {
   }
 
   async function init() {
-    setHome('/home');
-
-    await getChecks();
+    await Promise.all([getHome(), getChecks()]);
   }
 
   useUpdateEffect(() => {
@@ -81,20 +106,29 @@ const MenuAuthModal: FC<ModulesProps> = memo(({ onClose, open, roleId }) => {
 
         <ASelect
           className="w-240px"
-          options={data}
+          loading={isLoadingPages}
+          options={pageSelectOptions}
+          size="small"
           value={home}
           onChange={setHome}
         />
       </div>
 
       <SimpleScrollbar className="!h-270px">
-        <ATree
-          multiple
-          checkStrictly={false}
-          selectedKeys={checks}
-          treeData={tree}
-          onSelect={value => setChecks(value as string[])}
-        />
+        {isLoadingTree ? (
+          <div className="h-280px flex-center">
+            <ASpin />
+          </div>
+        ) : (
+          <ATree
+            blockNode
+            checkable
+            checkedKeys={checks}
+            className="h-280px"
+            treeData={treeData}
+            onCheck={value => setChecks(value as number[])}
+          />
+        )}
       </SimpleScrollbar>
     </AModal>
   );

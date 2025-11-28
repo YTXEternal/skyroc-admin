@@ -188,7 +188,7 @@ export const generatedRoutes: ElegantConstRoute[] = [
                   title: 'Manage Menu',
                   icon: 'material-symbols:route',
                   order: 3,
-                  roles: ['R_SUPER'],
+                  roles: ['R_SUPER']
                 }
               },
               {
