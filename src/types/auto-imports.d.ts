@@ -120,6 +120,7 @@ declare global {
   const useDynamicList: typeof import('ahooks')['useDynamicList']
   const useEcharts: typeof import('../hooks/common/echarts')['useEcharts']
   const useEffect: typeof import('react')['useEffect']
+  const useEncrypt: typeof import('../hooks/common/useEncrypt')['useEncrypt']
   const useEventEmitter: typeof import('ahooks')['useEventEmitter']
   const useEventListener: typeof import('ahooks')['useEventListener']
   const useEventTarget: typeof import('ahooks')['useEventTarget']

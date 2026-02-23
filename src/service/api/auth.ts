@@ -1,14 +1,19 @@
 import { request } from '../request';
 import { AUTH_URLS } from '../urls';
-
+import {useEncrypt} from '@/hooks/common/useEncrypt';
 /**
  * Login
  *
  * @param params Login parameters
  */
-export function fetchLogin(params: Api.Auth.LoginParams) {
-  return request<Api.Auth.LoginResponse>({
-    data: params,
+export async  function fetchLogin(params: Api.Auth.LoginParams) {
+  const {encryptPassword} = useEncrypt();
+  const data = {
+    password:await encryptPassword(params.password),
+    user_name:params.userName
+  };
+  return await request<Api.Auth.LoginResponse>({
+    data,
     method: 'post',
     url: AUTH_URLS.LOGIN
   });

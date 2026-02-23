@@ -58,6 +58,9 @@ declare module "@soybean-react/vite-plugin-react-router" {
     "(base)_projects_[pid]": "/projects/:pid";
     "(base)_projects_[pid]_edit": "/projects/:pid/edit";
     "(base)_projects_[pid]_edit_[id]": "/projects/:pid/edit/:id";
+    "(base)_system": "/system";
+    "(base)_system_roles": "/system/roles";
+    "(base)_system_user": "/system/user";
     "(base)_user-center": "/user-center";
     "(blank)_login": "/login";
     "(blank)_login_code-login": "/login/code-login";
@@ -166,6 +169,8 @@ declare module "@soybean-react/vite-plugin-react-router" {
     | "(base)_projects_[pid]_edit"
     | "(base)_projects_[pid]"
     | "(base)_projects"
+    | "(base)_system_roles"
+    | "(base)_system_user"
     | "(base)_user-center"
     | "(blank)"
     | "(blank)_login-out"

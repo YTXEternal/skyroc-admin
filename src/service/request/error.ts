@@ -90,7 +90,7 @@ export function handleError(
   let backendErrorCode = '';
 
   // get backend error message and code
-  if (error.code === BACKEND_ERROR_CODE) {
+  if (error.code == BACKEND_ERROR_CODE) {
     message = error.response?.data?.msg || message;
     backendErrorCode = String(error.response?.data?.code || '');
   }

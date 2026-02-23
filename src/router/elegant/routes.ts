@@ -341,6 +341,26 @@ export const generatedRoutes: ElegantConstRoute[] = [
             ]
           },
           {
+            matchedFiles: [null, null, null, null],
+            name: '(base)_system',
+            path: '/system',
+            handle: { i18nKey: 'route.(base)_system', title: '(base)_system' },
+            children: [
+              {
+                matchedFiles: [null, '/src/pages/(base)/system/roles/index.tsx', null, null],
+                name: '(base)_system_roles',
+                path: '/system/roles',
+                handle: { i18nKey: 'route.(base)_system_roles', title: '(base)_system_roles' }
+              },
+              {
+                matchedFiles: [null, '/src/pages/(base)/system/user/index.tsx', null, null],
+                name: '(base)_system_user',
+                path: '/system/user',
+                handle: { i18nKey: 'route.(base)_system_user', title: '(base)_system_user' }
+              }
+            ]
+          },
+          {
             matchedFiles: [null, '/src/pages/(base)/user-center/index.tsx', null, null],
             name: '(base)_user-center',
             path: '/user-center',
