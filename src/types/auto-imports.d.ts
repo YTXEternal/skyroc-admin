@@ -22,6 +22,7 @@ declare global {
   const AFlex: typeof import('antd')['Flex']
   const AForm: typeof import('antd')['Form']
   const AInput: typeof import('antd')['Input']
+  const AInputN: typeof import('antd')['InputN']
   const AInputNumber: typeof import('antd')['InputNumber']
   const AList: typeof import('antd')['List']
   const AMenu: typeof import('antd')['Menu']
@@ -85,12 +86,15 @@ declare global {
   const SvgIcon: typeof import('../components/SvgIcon')['default']
   const SystemLogo: typeof import('../components/SystemLogo')['default']
   const TypingAnimation: typeof import('../components/TypingAnimation')['TypingAnimation']
+  const UxForm: typeof import('../components/CRUD/UxForm/index')['default']
   const WaveBg: typeof import('../components/WaveBg')['default']
   const copy: typeof import('../hooks/common/copy')['default']
   const createRef: typeof import('react')['createRef']
+  const formatFormToValue: typeof import('../components/CRUD/UxForm/index')['formatFormToValue']
   const forwardRef: typeof import('react')['forwardRef']
   const lazy: typeof import('react')['lazy']
   const memo: typeof import('react')['memo']
+  const refactorFormField: typeof import('../components/CRUD/UxForm/index')['refactorFormField']
   const startTransition: typeof import('react')['startTransition']
   const useAntdTable: typeof import('ahooks')['useAntdTable']
   const useAppDispatch: typeof import('../hooks/business/useStore')['useAppDispatch']
@@ -218,4 +222,10 @@ declare global {
   // @ts-ignore
   export type { ECOption } from '../hooks/common/echarts'
   import('../hooks/common/echarts')
+  // @ts-ignore
+  export type { RefactorKeys } from '../components/CRUD/UxForm/index'
+  import('../components/CRUD/UxForm/index')
+  // @ts-ignore
+  export type { UxFormProps, UxFormData, UxFormType, CommonFormItem, UxFormItem, UxFormInput, UxFormSwitch, UxFormTree, UxFormSelect, UxFormInputNumber, UxFormTextarea } from '../components/CRUD/UxForm/types'
+  import('../components/CRUD/UxForm/types')
 }

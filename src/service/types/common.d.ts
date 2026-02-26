@@ -5,7 +5,7 @@
  */
 declare namespace Api {
   namespace Common {
-    /** 分页通用参数 */
+    /** 分页通用参数（废弃） */
     interface PaginatingCommonParams {
       /** 当前页码 */
       current: number;
@@ -15,7 +15,15 @@ declare namespace Api {
       total: number;
     }
 
-    /** 分页查询列表数据的通用参数 */
+    /** 最新的分页通用参数 */
+    interface PaginatingCommonQuery {
+      /** 当前页码 */
+      page: number;
+      /** 每页条数 */
+      pageSize: number;
+    }
+
+    /** 分页查询列表数据的通用参数（废弃） */
     interface PaginatingQueryRecord<T = any> extends PaginatingCommonParams {
       /** 数据列表 */
       records: T[];
@@ -47,5 +55,24 @@ declare namespace Api {
       /** 更新时间 */
       updateTime: string;
     } & T;
+
+
+    /**
+     * 分页通用参数，最新的按照这个来
+     */
+    type PaginatingQuery<T extends Record<string, any> = Record<string, any>> = PaginatingCommonQuery & T;
+
+
+    /**
+     * 最新的列表响应结构
+     *
+     * @typedef {ListResponse}
+     */
+    type ListResponse<T> = {
+      total: number;
+      page: number;
+      pageSize: number;
+      list:T[];
+    }
   }
 }
