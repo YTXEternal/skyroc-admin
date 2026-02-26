@@ -48,7 +48,6 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
   const useFormatCols = () => {
     return columns.map(v => {
       let isFormat = false;
-
       const condition: Array<[boolean,() => void]> = [
         [
           v.type === 'time',

@@ -18,18 +18,19 @@ declare namespace Api {
       del_flag: string;
       create_by: string;
       update_by: string;
-      menu_ids:number[];
+      menu_ids: number[];
       remark: string;
     }
 
 
 
     /** 分页查询参数 */
-    type PaginatingQuery = Common.PaginatingQuery<{
-      role_name?: string;
-      role_key?: string;
-      status?: string;
-    }>
+    type PaginatingQuery = Common.PaginatingQuery<Partial<
+      {
+        role_name: string;
+        role_key: string;
+        status: string;
+      }>>
 
     type AddRequest = {
       role_name: string;
@@ -40,7 +41,7 @@ declare namespace Api {
       dept_check_strictly: boolean;
       status: string;
       remark: string;
-      menu_ids:number[];
+      menu_ids: number[];
     }
     /** 删除请求参数 */
     type DelRequest = {
@@ -52,8 +53,8 @@ declare namespace Api {
     type ChangeStatusRequest = Pick<ListItem, 'role_id' | 'status'>
 
     /** 更新角色信息请求参数 */
-    type UpdateRequest = Omit<AddRequest,'role_key'> & {
-      role_id:number;
+    type UpdateRequest = Omit<AddRequest, 'role_key'> & {
+      role_id: number;
     }
   }
 }

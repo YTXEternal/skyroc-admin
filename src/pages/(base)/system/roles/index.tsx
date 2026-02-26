@@ -1,11 +1,10 @@
 
-import UxForm, { formatFormToValue } from '@/components/CRUD/UxForm';
+import UxForm, { formatFormToValue, refactorFormField } from '@/components/CRUD/UxForm';
 import UxCRUD from '@/components/CRUD/UxCRUD';
 import type { UxCRUDColumns, UxCRUDProps } from '@/components/CRUD/UxCRUD/types';
 import type { UxFormType, UxFormProps, UxFormData } from '@/components/CRUD/UxForm/types'
 import { commonEditForm, type FormFieldType } from './form';
-import { fetchRolesList, fetchDelRoles, fetchAddRoles, fetchRoleDetails, fetchPutRole, fetchPutRoleStatus } from '@/service/api';
-
+import { fetchRolesList, fetchDelRoles, fetchMenuList, fetchAddRoles, fetchRoleDetails, fetchPutRole, fetchPutRoleStatus } from '@/service/api';
 type RowData = Api.Roles.ListItem;
 // role_id: number;
 //     role_name: string;
@@ -22,10 +21,48 @@ type RowData = Api.Roles.ListItem;
 const Component = () => {
   const [data, setData] = useState<FormFieldType>(formatFormToValue(commonEditForm) as FormFieldType);
   const [list, setList] = useState<FormFieldType>();
+  const [treeData, setTreeData] = useState<Api.Menu.List>([]);
   const onSubmit = (data: UxFormProps['data']) => {
     console.log('data', data);
     return Promise.resolve(1);
   }
+
+  const useFormField = () => {
+    const form = refactorFormField({
+      form: commonEditForm, refactorKeys: {
+        'menu_ids': (val) => {
+          val.type === 'tree';
+          val.nativeProps = {
+            ...val.nativeProps,
+            treeData,
+            'fieldNames':{
+              'title':'menu_name',
+              'key':'menu_id'
+            }
+          }
+          return val;
+        }
+      }
+    });
+
+    useEffect(() => {
+      fetchMenuList({
+        status: "0"
+      }).then(data => {
+        setTreeData(data || []);
+      })
+    },[]);
+
+
+    return {
+      form
+    }
+  }
+
+  const { form } = useFormField();
+
+
+
 
   const useTable = () => {
     const columns: UxCRUDColumns<RowData> = [
@@ -120,8 +157,8 @@ const Component = () => {
         },
         'formatterConfirmText': (record) => `确定删除角色:${record.role_name}吗？`,
         permissions: ['system:role:remove'],
-        successText:'删除成功',
-        errorText:'删除失败',
+        successText: '删除成功',
+        errorText: '删除失败',
       },
     ],
     title: '操作',
@@ -129,6 +166,12 @@ const Component = () => {
       'fixed': 'right'
     }
   }
+
+
+  useEffect(() => {
+
+  }, []);
+
   return <div>
     {/* <UxForm<FormFieldType>
       name="basic"
@@ -136,12 +179,11 @@ const Component = () => {
       form={commonEditForm}
       data={data}
     ></UxForm> */}
-
     <UxCRUD<Api.Roles.ListItem>
       columns={columns}
       fetchGetList={fetchRolesList}
       action={actions}
-      form={commonEditForm}
+      form={form}
       addButtons={{
         'text': '新增',
         'onConfirm': async (record) => {
@@ -153,7 +195,6 @@ const Component = () => {
       permissions={
         ['system:role:list']
       }
-
     >
     </UxCRUD>
   </div>;
