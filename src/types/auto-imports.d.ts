@@ -14,6 +14,7 @@ declare global {
   const ACollapse: typeof import('antd')['Collapse']
   const AColorPicker: typeof import('antd')['ColorPicker']
   const AConfigProvider: typeof import('antd')['ConfigProvider']
+  const AD: typeof import('antd')['D']
   const ADescriptions: typeof import('antd')['Descriptions']
   const ADivider: typeof import('antd')['Divider']
   const ADrawer: typeof import('antd')['Drawer']
@@ -86,6 +87,7 @@ declare global {
   const SvgIcon: typeof import('../components/SvgIcon')['default']
   const SystemLogo: typeof import('../components/SystemLogo')['default']
   const TypingAnimation: typeof import('../components/TypingAnimation')['TypingAnimation']
+  const UxCRUD: typeof import('../components/CRUD/UxCRUD/index')['default']
   const UxForm: typeof import('../components/CRUD/UxForm/index')['default']
   const WaveBg: typeof import('../components/WaveBg')['default']
   const copy: typeof import('../hooks/common/copy')['default']
@@ -222,6 +224,9 @@ declare global {
   // @ts-ignore
   export type { ECOption } from '../hooks/common/echarts'
   import('../hooks/common/echarts')
+  // @ts-ignore
+  export type { CRUDCOmponentType, Permissions, UxCRUDColumns, UxCRUDTimeCol, UxCRUDProps, EXPORT_UxCRUDMethods, FetchGetList, Actions, UxCRUDActions, ActionCommonType, ActionDel, ActionEdit, SearchFieldProps, AddButtons } from '../components/CRUD/UxCRUD/types'
+  import('../components/CRUD/UxCRUD/types')
   // @ts-ignore
   export type { RefactorKeys } from '../components/CRUD/UxForm/index'
   import('../components/CRUD/UxForm/index')

@@ -80,5 +80,7 @@ export type FormFieldType = {
   dept_check_strictly:boolean;
   menu_ids:string[];
   remark:string;
+  create_time:string;
+  update_time:string;
 }
 

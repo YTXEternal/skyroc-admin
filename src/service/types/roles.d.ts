@@ -18,6 +18,7 @@ declare namespace Api {
       del_flag: string;
       create_by: string;
       update_by: string;
+      menu_ids:number[];
       remark: string;
     }
 

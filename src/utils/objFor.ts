@@ -1,9 +1,9 @@
 import {cloneDeep} from 'lodash-es'
-export const objFor = <T extends Record<string, unknown>>(
+export const objFor = <T>(
   obj: T,
   cb: <K extends keyof T>(key: K, value: T[K]) => void
 ) => {
-  const keys = Object.keys(obj) as Array<keyof T>;
+  const keys = Object.keys(obj as Record<string, unknown>) as Array<keyof T>;
   const newObj = cloneDeep(obj);
   for (const key of keys) {
     cb(key, cloneDeep(newObj[key]));

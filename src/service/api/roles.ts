@@ -58,7 +58,7 @@ export function fetchDelRoles(data: Api.Roles.DelRequest) {
  * @returns {*}
  */
 export function fetchRoleDetails(roleId: number) {
-  return request<any>({
+  return request<Api.Roles.ListItem>({
     url: `${ROLES_URLS.SYSTEM_ROLE_BASE}/${roleId}`
   });
 }

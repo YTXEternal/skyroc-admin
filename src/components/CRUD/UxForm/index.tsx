@@ -3,6 +3,7 @@ import { objFor } from '@/utils/objFor';
 import { Form, FormProps } from 'antd';
 import { cloneDeep } from 'lodash-es';
 import { Input } from 'antd';
+import { SyncOutlined } from '@ant-design/icons';
 
 const { TextArea } = Input;
 /**
@@ -47,7 +48,7 @@ export const refactorFormField = ({ form, refactorKeys }: { form: UxFormType, re
 
 
 
-const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data }: UxFormProps<T>) => {
+const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data, onCancel, whiteKeys }: UxFormProps<T>) => {
   // 控制表单提交的loading状态
   const [loading, setLoading] = useState<boolean>(false);
   const [formInstance] = Form.useForm();
@@ -60,13 +61,11 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data 
   }
   const onFinish: FormProps<T>['onFinish'] = async (values) => {
     try {
+      setLoading(true);
       // 提交的时候做一遍格式化
       const formater = () => {
         const data: UxFormData = {};
-        console.log('values', values);
-        console.log('objFor(form)', (form));
         objFor(form, (key, val) => {
-          console.log('key', key);
           const currentVal = cloneDeep(values[key]);
           let result: any = null;
           if (val.type === 'switch' && typeof currentVal === 'boolean') {
@@ -81,9 +80,18 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data 
         return data;
       }
       const result = formater();
+      // 把白名单之内的数据提出来
+      const handleWhiteKeys = () => {
+        if (!whiteKeys || !whiteKeys.length) return;
+        whiteKeys.forEach(key => {
+          if (!(key in data)) return;
+          result[key] = data[key];
+        })
+      }
+      handleWhiteKeys();
       // @ts-ignore
       await onSubmit(result);
-      window.$message?.success('提交成功');
+      setLoading(false);
     } catch (err) {
       handleSubmitError(err);
     }
@@ -91,7 +99,6 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data 
   const onFinishFailed: FormProps<T>['onFinishFailed'] = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
-
   /**
    * 初始化表单数据
   */
@@ -130,7 +137,7 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data 
             })
             // formInstance.setFieldValue(key, formatter(value));
           }} {...(item.nativeProps || {})} />;
-          case 'textarea':
+        case 'textarea':
           // @ts-ignore
           return <TextArea className="w-full" key={key as React.Key} value={formData[key]} onChange={({ target }) => {
             const { value } = target;
@@ -175,7 +182,7 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data 
               // @ts-ignore
               formatter(formData[key])
             }
-          // @ts-ignore
+            // @ts-ignore
             onCheck={({ checked }: {
               checked: string | number | bigint[];
               halfChecked: string | number | bigint[];
@@ -219,40 +226,51 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data 
     syncFormData(values);
   }
 
+  const buttonSize = {
+    width: '130px',
+    height: '35px'
+  }
 
   return (
-    <AForm
-      name={name}
-      form={formInstance}
-      labelCol={{ span: 8 }}
-      wrapperCol={{ span: 16 }}
-      className='w-full'
-      initialValues={{ remember: true }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      autoComplete="off"
-    >
-      {
-        Object.keys(form || {}).map(key => {
-          const item = form[key];
-          return renderUxFormControl(key, item);
-        })
-      }
-      <ASpace size={20} direction='horizontal' align='end'>
-        <AForm.Item label={null}>
-          <AButton onClick={() => {
-            reset();
-          }}>
-            取消
-          </AButton>
-        </AForm.Item>
-        <AForm.Item label={null}>
-          <AButton type="primary" htmlType="submit">
-            确定
-          </AButton>
-        </AForm.Item>
-      </ASpace>
-    </AForm>
+    <>
+      <ASpin  size="large" tip="Loading" spinning={loading}>
+        <AForm
+          name={name}
+          form={formInstance}
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          className='w-full'
+          initialValues={{ remember: true }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
+        >
+          {
+            Object.keys(form || {}).map(key => {
+              const item = form[key];
+              return renderUxFormControl(key, item);
+            })
+          }
+          <ASpace size={20} direction='horizontal' align='end'>
+            <AForm.Item label={null}>
+              <AButton style={buttonSize} onClick={() => {
+                reset();
+                onCancel && onCancel();
+              }}
+                loading={loading ? { icon: <SyncOutlined spin /> } : undefined}
+              >
+                取消
+              </AButton>
+            </AForm.Item>
+            <AForm.Item label={null}>
+              <AButton style={buttonSize} type="primary" htmlType="submit" loading={loading ? { icon: <SyncOutlined spin /> } : undefined}>
+                确定
+              </AButton>
+            </AForm.Item>
+          </ASpace>
+        </AForm>
+      </ASpin>
+    </>
   )
 };
 export default UxForm;

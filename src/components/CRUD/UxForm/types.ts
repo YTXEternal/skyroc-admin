@@ -7,15 +7,37 @@ import type {InputProps,SwitchProps,TreeProps,SelectProps,InputNumberProps} from
 //   data:UxFormData;
 // }
 type AnyObj = Record<string, any>;
+
+/**
+ * Description placeholder
+ *
+ * @export
+ * @interface UxFormProps
+ * @typedef {UxFormProps}
+ * @template {UxFormData} [T=UxFormData]
+ */
 export interface UxFormProps<T extends UxFormData = UxFormData> {
   /** 表单提交回调 */
   onSubmit: (data: T) => Promise<unknown>;
+  /**
+   * 表单取消回调
+   *
+   * @type {()=>void}
+   */
+  onCancel:()=>void;
   form: UxFormType;
   data: T;
   name:string;
+  whiteKeys?:string[];
 }
 
 
+/**
+ * 表单初始数据类型
+ *
+ * @export
+ * @typedef {UxFormData}
+ */
 export type UxFormData = Record<string,any>;
 export type UxFormType = Record<string,UxFormItem>;
 // const commonEditForm = {

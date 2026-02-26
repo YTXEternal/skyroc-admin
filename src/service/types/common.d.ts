@@ -18,7 +18,7 @@ declare namespace Api {
     /** 最新的分页通用参数 */
     interface PaginatingCommonQuery {
       /** 当前页码 */
-      page: number;
+      pageNum: number;
       /** 每页条数 */
       pageSize: number;
     }
