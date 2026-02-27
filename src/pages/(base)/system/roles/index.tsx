@@ -31,6 +31,7 @@ const Component = () => {
       }
     });
     useEffect(() => {
+      if(!hasAuth('system:menu:list')) return;
       fetchMenuList({
         status: "0"
       }).then(data => {
