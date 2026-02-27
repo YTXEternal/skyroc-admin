@@ -188,7 +188,6 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data,
               halfChecked: string | number | bigint[];
             }) => {
               formInstance.setFieldValue(key, checked);
-              console.log('checked',checked);
               syncFormData({
               ...formData,
               [key]: checked

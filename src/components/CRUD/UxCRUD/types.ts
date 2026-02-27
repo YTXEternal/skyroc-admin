@@ -1,18 +1,30 @@
 
-import type { TableProps, TableColumnProps, TableColumnType } from 'antd';
+import type { TableProps, TableColumnProps, TableColumnType, InputProps, SelectProps } from 'antd';
 import type { UxFormProps, UxFormData } from '@/components/CRUD/UxForm/types';
 export type CRUDCOmponentType = 'input';
 export type Permissions = string[] | string;
 
-export type UxCRUDColumns<T> = ({
-  searchConfig?: {
-    // 是否开启搜索
-    on: boolean;
-    component: CRUDCOmponentType;
-    defaultVal?: any;
-  }
-} & TableColumnType<T> & (UxCRUDTimeCol | UxCRUDTAGCol))[];
 
+export type SearchConfig = {
+  // 是否开启搜索
+  on: boolean;
+  defaultVal?: any;
+  placeholder?:string;
+} & (SearchCompInput | SearchCompSelect);
+
+export type SearchCompInput = {
+  type: 'input';
+  nativeConf?: InputProps;
+};
+
+export type SearchCompSelect = {
+  type: 'select';
+  nativeConf?: SelectProps;
+};
+
+export type UxCRUDColumns<T> = ({
+  searchConfig?: SearchConfig
+} & TableColumnType<T> & (UxCRUDTimeCol | UxCRUDTAGCol| UxCRUDSWITCHCol))[];
 export type UxCRUDTimeCol = {
   type?: 'time';
   /**
@@ -25,6 +37,12 @@ export type UxCRUDTimeCol = {
 
 export type UxCRUDTAGCol = {
   type?: 'tag';
+}
+
+export type UxCRUDSWITCHCol = {
+  type?: 'switch';
+  onChange:(value:boolean) =>void;
+  formatter:(value:any)=>boolean;
 }
 
 

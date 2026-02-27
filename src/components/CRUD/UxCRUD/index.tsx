@@ -1,6 +1,6 @@
 
 import { AnyObject } from 'antd/es/_util/type';
-import type { UxCRUDProps, UxCRUDColumns, ActionDel, ActionEdit, SearchFieldProps, Permissions } from './types';
+import type { UxCRUDProps, UxCRUDColumns, ActionDel, ActionEdit, SearchFieldProps, Permissions, UxCRUDSWITCHCol } from './types';
 import type { TableProps, PaginationProps, TableColumnType } from 'antd';
 import { PlusOutlined } from '@ant-design/icons'
 import { cloneDeep } from 'lodash-es';
@@ -48,7 +48,7 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
   const useFormatCols = () => {
     return columns.map(v => {
       let isFormat = false;
-      const condition: Array<[boolean,() => void]> = [
+      const condition: Array<[boolean, () => void]> = [
         [
           v.type === 'time',
           () => {
@@ -61,18 +61,29 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
         ],
         [
           v.type === 'tag',
-          () =>{
+          () => {
             isFormat = true;
-             v['render'] = (_, record) => {
+            v['render'] = (_, record) => {
               // @ts-ignore
-              return<ATag color="processing">{record[v.key!]}</ATag>
+              return <ATag color="processing">{record[v.key!]}</ATag>
             }
           }
-        ]
+        ],
+        [
+          v.type==='switch',
+          () => {
+            const nowVal = v as UxCRUDSWITCHCol;
+            isFormat = true;
+            v['render'] = (_, record) => {
+              // @ts-ignore
+              return <ASwitch color="processing" checked={nowVal.formatter(record[v.key!])} onChange={nowVal.onChange}/>
+            }
+          }
+        ],
       ]
 
-      const item = condition.find(v=>v[0]);
-      if(item) {
+      const item = condition.find(v => v[0]);
+      if (item) {
         item[1]();
       }
       if (isFormat) {
@@ -156,10 +167,10 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
       return columns.filter(v => v.searchConfig?.on).map((val) => {
         const config = val.searchConfig!;
         const key = val.key! as string;
-        switch (config.component) {
+        switch (config.type) {
           case 'input':
-            return <SearchField label={val.title! as string}>
-              <AInput key={key} value={searchParams[key]} onChange={({ target }) => {
+            return <SearchField key={key} label={val.title! as string}>
+              <AInput  {...(config.nativeConf || {})} value={searchParams[key]} onChange={({ target }) => {
                 const { value } = target;
                 setPagination({
                   ...pagination,
@@ -170,8 +181,20 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
                   [key]: value
                 })
               }}></AInput>
-            </SearchField>
-
+            </SearchField>;
+          case 'select':
+            return <SearchField key={key} label={val.title! as string}>
+              <ASelect  {...(config.nativeConf || {})} value={searchParams[key]} onChange={(value) => {
+                setPagination({
+                  ...pagination,
+                  current: 1,
+                })
+                setSearchparams({
+                  ...searchParams,
+                  [key]: value
+                })
+              }}></ASelect>
+            </SearchField>;
         }
       })
     }
@@ -404,7 +427,6 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
   };
 
   const Buttons = useButtons();
-
 
 
   const Query = useQuery();

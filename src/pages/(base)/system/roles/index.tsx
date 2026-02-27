@@ -6,26 +6,8 @@ import type { UxFormType, UxFormProps, UxFormData } from '@/components/CRUD/UxFo
 import { commonEditForm, type FormFieldType } from './form';
 import { fetchRolesList, fetchDelRoles, fetchMenuList, fetchAddRoles, fetchRoleDetails, fetchPutRole, fetchPutRoleStatus } from '@/service/api';
 type RowData = Api.Roles.ListItem;
-// role_id: number;
-//     role_name: string;
-//     role_key: string;
-//     role_sort: number;
-//     data_scope: string;
-//     menu_check_strictly: boolean;
-//     dept_check_strictly: boolean;
-//     status: string;
-//     del_flag: string;
-//     create_by: string;
-//     update_by: string;
-//     remark: string;
 const Component = () => {
-  const [data, setData] = useState<FormFieldType>(formatFormToValue(commonEditForm) as FormFieldType);
-  const [list, setList] = useState<FormFieldType>();
   const [treeData, setTreeData] = useState<Api.Menu.List>([]);
-  const onSubmit = (data: UxFormProps['data']) => {
-    console.log('data', data);
-    return Promise.resolve(1);
-  }
 
   const useFormField = () => {
     const form = refactorFormField({
@@ -34,34 +16,31 @@ const Component = () => {
           val.type === 'tree';
           val.nativeProps = {
             ...val.nativeProps,
+            // @ts-ignore
             treeData,
-            'fieldNames':{
-              'title':'menu_name',
-              'key':'menu_id'
+            'fieldNames': {
+              'title': 'menu_name',
+              'key': 'menu_id',
+              'children': 'children'
             }
           }
           return val;
         }
       }
     });
-
     useEffect(() => {
       fetchMenuList({
         status: "0"
       }).then(data => {
         setTreeData(data || []);
       })
-    },[]);
-
+    }, []);
 
     return {
       form
     }
   }
-
   const { form } = useFormField();
-
-
 
 
   const useTable = () => {
@@ -72,7 +51,8 @@ const Component = () => {
         dataIndex: 'role_name',
         'searchConfig': {
           on: true,
-          component: 'input'
+          type:'input',
+          defaultVal:''
         }
       },
       {
@@ -105,6 +85,38 @@ const Component = () => {
         title: '状态',
         key: 'status',
         dataIndex: 'status',
+        searchConfig: {
+          on: true,
+          type:'select',
+          defaultVal:"0",
+          placeholder:'请选择状态',
+          nativeConf:{
+            style:{
+              width:'width:80px'
+            },
+            options:[
+               {
+                label:'所有',
+                value:null
+              },
+              {
+                label:'启用',
+                value:'0'
+              },
+              {
+                label:'停用',
+                value:'1'
+              }
+            ]
+          }
+        },
+        type:'switch',
+        onChange(value) {
+          console.log('value');
+        },
+        formatter(value) {
+          return value === '0';
+        }
       },
       {
         title: '备注',
@@ -167,18 +179,7 @@ const Component = () => {
     }
   }
 
-
-  useEffect(() => {
-
-  }, []);
-
   return <div>
-    {/* <UxForm<FormFieldType>
-      name="basic"
-      onSubmit={onSubmit}
-      form={commonEditForm}
-      data={data}
-    ></UxForm> */}
     <UxCRUD<Api.Roles.ListItem>
       columns={columns}
       fetchGetList={fetchRolesList}
