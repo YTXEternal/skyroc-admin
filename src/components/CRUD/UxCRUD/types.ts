@@ -1,5 +1,5 @@
 
-import type { TableProps, TableColumnProps, TableColumnType, InputProps, SelectProps } from 'antd';
+import type { TableProps, TableColumnProps, TableColumnType, InputProps, SelectProps, SwitchProps } from 'antd';
 import type { UxFormProps, UxFormData } from '@/components/CRUD/UxForm/types';
 export type CRUDCOmponentType = 'input';
 export type Permissions = string[] | string;
@@ -43,6 +43,7 @@ export type UxCRUDSWITCHCol<T> = {
   type?: 'switch';
   onChange:(value:boolean,record:T) =>Promise<any>;
   formatter:(value:any)=>boolean;
+  nativeConf?:SwitchProps;
 }
 
 

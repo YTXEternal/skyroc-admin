@@ -76,7 +76,7 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
             isFormat = true;
             v['render'] = (_, record) => {
               // @ts-ignore
-              return <ASwitch color="processing" checked={nowVal.formatter(record[v.key!])} onChange={async(checked)=>{
+              return <ASwitch color="processing" {...(nowVal.nativeConf || {})} checked={nowVal.formatter(record[v.key!])} onChange={async(checked)=>{
                 const isPass = await nowVal.onChange(checked,record);
                 if(!isPass) return;
                 debugger;

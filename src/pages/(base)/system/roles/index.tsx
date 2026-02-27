@@ -5,10 +5,12 @@ import type { UxCRUDColumns, UxCRUDProps } from '@/components/CRUD/UxCRUD/types'
 import type { UxFormType, UxFormProps, UxFormData } from '@/components/CRUD/UxForm/types'
 import { commonEditForm, type FormFieldType } from './form';
 import { fetchRolesList, fetchDelRoles, fetchMenuList, fetchAddRoles, fetchRoleDetails, fetchPutRole, fetchPutRoleStatus } from '@/service/api';
+import { useAuth } from '@/features/auth';
 type RowData = Api.Roles.ListItem;
+
 const Component = () => {
   const [treeData, setTreeData] = useState<Api.Menu.List>([]);
-
+  const {hasAuth} = useAuth();
   const useFormField = () => {
     const form = refactorFormField({
       form: commonEditForm, refactorKeys: {
@@ -101,6 +103,9 @@ const Component = () => {
         },
         formatter(value) {
           return value === '0';
+        },
+        nativeConf:{
+          'disabled':!hasAuth('system:role:edit')
         }
       },
       // {
