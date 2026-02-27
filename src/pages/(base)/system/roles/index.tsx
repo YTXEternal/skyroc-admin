@@ -9,6 +9,7 @@ type RowData = Api.Roles.ListItem;
 const Component = () => {
   const [treeData, setTreeData] = useState<Api.Menu.List>([]);
 
+
   const useFormField = () => {
     const form = refactorFormField({
       form: commonEditForm, refactorKeys: {
@@ -35,13 +36,11 @@ const Component = () => {
         setTreeData(data || []);
       })
     }, []);
-
     return {
       form
     }
   }
   const { form } = useFormField();
-
 
   const useTable = () => {
     const columns: UxCRUDColumns<RowData> = [
@@ -51,8 +50,8 @@ const Component = () => {
         dataIndex: 'role_name',
         'searchConfig': {
           on: true,
-          type:'input',
-          defaultVal:''
+          type: 'input',
+          defaultVal: ''
         }
       },
       {
@@ -60,6 +59,50 @@ const Component = () => {
         key: 'role_key',
         dataIndex: 'role_key',
         type: 'tag',
+      },
+      {
+        title: '状态',
+        key: 'status',
+        dataIndex: 'status',
+        searchConfig: {
+          on: true,
+          type: 'select',
+          defaultVal: "0",
+          placeholder: '请选择状态',
+          nativeConf: {
+            style: {
+              width: 'width:80px'
+            },
+            options: [
+              {
+                label: '所有',
+                value: null
+              },
+              {
+                label: '启用',
+                value: '0'
+              },
+              {
+                label: '停用',
+                value: '1'
+              }
+            ]
+          }
+        },
+        type: 'switch',
+        async onChange(value, record) {
+          const status = value ? "0" : "1";
+          const { role_id } = record;
+          await fetchPutRoleStatus({
+            role_id,
+            status
+          });
+          window.$message?.success('状态更新成功');
+          return true;
+        },
+        formatter(value) {
+          return value === '0';
+        }
       },
       {
         title: '排序',
@@ -81,43 +124,7 @@ const Component = () => {
         key: 'dept_check_strictly',
         dataIndex: 'dept_check_strictly',
       },
-      {
-        title: '状态',
-        key: 'status',
-        dataIndex: 'status',
-        searchConfig: {
-          on: true,
-          type:'select',
-          defaultVal:"0",
-          placeholder:'请选择状态',
-          nativeConf:{
-            style:{
-              width:'width:80px'
-            },
-            options:[
-               {
-                label:'所有',
-                value:null
-              },
-              {
-                label:'启用',
-                value:'0'
-              },
-              {
-                label:'停用',
-                value:'1'
-              }
-            ]
-          }
-        },
-        type:'switch',
-        onChange(value) {
-          console.log('value');
-        },
-        formatter(value) {
-          return value === '0';
-        }
-      },
+
       {
         title: '备注',
         key: 'remark',

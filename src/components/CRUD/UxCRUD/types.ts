@@ -24,7 +24,7 @@ export type SearchCompSelect = {
 
 export type UxCRUDColumns<T> = ({
   searchConfig?: SearchConfig
-} & TableColumnType<T> & (UxCRUDTimeCol | UxCRUDTAGCol| UxCRUDSWITCHCol))[];
+} & TableColumnType<T> & (UxCRUDTimeCol | UxCRUDTAGCol| UxCRUDSWITCHCol<T>))[];
 export type UxCRUDTimeCol = {
   type?: 'time';
   /**
@@ -39,9 +39,9 @@ export type UxCRUDTAGCol = {
   type?: 'tag';
 }
 
-export type UxCRUDSWITCHCol = {
+export type UxCRUDSWITCHCol<T> = {
   type?: 'switch';
-  onChange:(value:boolean) =>void;
+  onChange:(value:boolean,record:T) =>Promise<any>;
   formatter:(value:any)=>boolean;
 }
 

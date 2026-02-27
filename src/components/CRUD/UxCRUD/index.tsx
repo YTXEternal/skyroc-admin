@@ -72,11 +72,16 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
         [
           v.type==='switch',
           () => {
-            const nowVal = v as UxCRUDSWITCHCol;
+            const nowVal = v as UxCRUDSWITCHCol<T>;
             isFormat = true;
             v['render'] = (_, record) => {
               // @ts-ignore
-              return <ASwitch color="processing" checked={nowVal.formatter(record[v.key!])} onChange={nowVal.onChange}/>
+              return <ASwitch color="processing" checked={nowVal.formatter(record[v.key!])} onChange={async(checked)=>{
+                const isPass = await nowVal.onChange(checked,record);
+                if(!isPass) return;
+                debugger;
+                refresh();
+              }}/>
             }
           }
         ],
@@ -98,6 +103,7 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
    *
    * @returns {{ dataSource: any; setDataSource: any; pagination: any; setPagination: any; searchParams: any; renderSearchControl: () => any; loading: any; reset: () => void; }}
    */
+    const [searchParams, setSearchparams] = useState<AnyObject>({});
   const useQuery = () => {
     const [dataSource, setDataSource] = useState<T[]>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
@@ -112,7 +118,6 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
         })
       }
     });
-    const [searchParams, setSearchparams] = useState<AnyObject>({});
     const [loading, setLoading] = useState<boolean>(false);
     const fetchList = async () => {
       if (!isPermission(permissions)) {
@@ -125,12 +130,10 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
       }
       setLoading(true);
       try {
-        const { list, total, page, pageSize } = await fetchGetList(params);
+        const { list, total} = await fetchGetList(params);
         setDataSource(list);
         setPagination({
           ...pagination,
-          current: page,
-          pageSize,
           total,
         })
       } finally {
@@ -147,9 +150,9 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
         const key = val.key as string;
         result[key] = val?.searchConfig?.defaultVal;
       }
+      console.log('initSearchParamsresult',result);
       setSearchparams(result);
     }
-
 
 
     /** 重置搜索条件 */
@@ -214,7 +217,6 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
       setDataSource,
       pagination,
       setPagination,
-      searchParams,
       renderSearchControl,
       loading,
       reset,
@@ -433,7 +435,12 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
   const Actions = useActions();
 
   const {
-    dataSource, setDataSource, pagination, renderSearchControl, loading, reset,
+    dataSource,
+    setDataSource,
+    pagination,
+    renderSearchControl,
+    loading,
+    reset,
     fetchList,
     setPagination,
   } = Query;
