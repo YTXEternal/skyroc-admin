@@ -1,12 +1,12 @@
 
 import { AnyObject } from 'antd/es/_util/type';
 import type { UxCRUDProps, UxCRUDColumns, ActionDel, ActionEdit, SearchFieldProps, Permissions, UxCRUDSWITCHCol } from './types';
-import type { TableProps, PaginationProps, TableColumnType } from 'antd';
+import { type TableProps, type PaginationProps, type TableColumnType } from 'antd';
 import { PlusOutlined } from '@ant-design/icons'
-import { cloneDeep,debounce } from 'lodash-es';
+import { cloneDeep, debounce } from 'lodash-es';
 import { JSX } from 'react';
 import UxForm from '@/components/CRUD/UxForm';
-import type { UxFormProps, UxFormData } from '@/components/CRUD/UxForm/types';
+import type { UxFormProps, UxFormData, UxFormType } from '@/components/CRUD/UxForm/types';
 import { nanoid } from '@sa/utils';
 import dayjs from 'dayjs';
 import { formatFormToValue } from '@/components/CRUD/UxForm';
@@ -35,6 +35,7 @@ function SearchField({ children, label }: SearchFieldProps) {
  */
 export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, action, form, addButtons, permissions }: UxCRUDProps<T>) {
   const { hasAuth } = useAuth();
+  const [formType, setFormType] = useState<UxFormType>({});
   /**
     * 判断当前是否拥有权限
     * 如果是undefined那就是没有传这个参数所以默认是通过的
@@ -65,23 +66,22 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
             isFormat = true;
             v['render'] = (_, record) => {
               // @ts-ignore
-              return <ATag color="processing">{record[v.key!]}</ATag>
+              return <ATag color="processing">{v.formatter ? v.formatter(record) : record[v.key!]}</ATag>
             }
           }
         ],
         [
-          v.type==='switch',
+          v.type === 'switch',
           () => {
             const nowVal = v as UxCRUDSWITCHCol<T>;
             isFormat = true;
             v['render'] = (_, record) => {
               // @ts-ignore
-              return <ASwitch color="processing" {...(nowVal.nativeConf || {})} checked={nowVal.formatter(record[v.key!])} onChange={async(checked)=>{
-                const isPass = await nowVal.onChange(checked,record);
-                if(!isPass) return;
-                debugger;
+              return <ASwitch color="processing" {...(nowVal.nativeConf || {})} checked={nowVal.formatter(record[v.key!])} onChange={async (checked) => {
+                const isPass = await nowVal.onChange(checked, record);
+                if (!isPass) return;
                 refresh();
-              }}/>
+              }} />
             }
           }
         ],
@@ -98,12 +98,22 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
     });
   }
   const [cols, setCols] = useState<UxCRUDColumns<T>>(useFormatCols());
+  const handleColumnstoFormData = () => {
+      if (!columns.length) return {} as AnyObject;
+      const result: AnyObject = {};
+      for (const val of columns) {
+        if (!val.searchConfig?.on) continue;
+        const key = val.key as string;
+        result[key] = val?.searchConfig?.defaultVal;
+      }
+      return result;
+    }
   /**
    * 创建搜索/列表获取
    *
    * @returns {{ dataSource: any; setDataSource: any; pagination: any; setPagination: any; searchParams: any; renderSearchControl: () => any; loading: any; reset: () => void; }}
    */
-    const [searchParams, setSearchparams] = useState<AnyObject>({});
+  const [searchParams, setSearchparams] = useState<AnyObject>(handleColumnstoFormData());
   const useQuery = () => {
     const [dataSource, setDataSource] = useState<T[]>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
@@ -119,11 +129,11 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
       }
     });
     const [loading, setLoading] = useState<boolean>(false);
-    const fetchList = debounce(async () => {
+    const fetchList = async () => {
       if (!isPermission(permissions)) {
         return window.$message?.error('您没有相关权限');
       };
-      console.log('useQuery',dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'))
+      console.log('useQuery', dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'))
       const params = {
         ...searchParams,
         pageNum: pagination.current!,
@@ -131,7 +141,7 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
       }
       setLoading(true);
       try {
-        const { list, total} = await fetchGetList(params);
+        const { list, total } = await fetchGetList(params);
         setDataSource(list);
         setPagination({
           ...pagination,
@@ -140,21 +150,15 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
       } finally {
         setLoading(false);
       }
-    },500);
+    };
+
+
 
     /** 初始化搜索参数 */
     const initSearchParams = () => {
-      if (!columns.length) return;
-      const result: AnyObject = {};
-      for (const val of columns) {
-        if (!val.searchConfig?.on) continue;
-        const key = val.key as string;
-        result[key] = val?.searchConfig?.defaultVal;
-      }
-      console.log('initSearchParamsresult',result);
+      const result = handleColumnstoFormData()
       setSearchparams(result);
     }
-
 
     /** 重置搜索条件 */
     const reset = () => {
@@ -202,16 +206,16 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
         }
       })
     }
-
     useEffect(() => {
       initSearchParams();
     }, []);
 
-    /** 监听搜索参数变化 */
-    useEffect(() => {
+    const watchList = () => {
       fetchList();
-    }, [pagination!.current, pagination!.pageSize, searchParams])
+    };
 
+    /** 监听搜索参数变化 */
+    useEffect(watchList!, [pagination!.current, pagination!.pageSize, searchParams])
     return {
       dataSource,
       setDataSource,
@@ -276,6 +280,7 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
         /*
           判断当前是否拥有详情权限
         */
+        console.log('click edit', record);
         if (!isPermission(action.detailPermissions)) return;
         setDrawerTitle(action.title);
         setIsAdd(false);
@@ -355,6 +360,7 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
             break;
           case 'edit':
             onDrawerClose();
+
             break;
         }
       }
@@ -473,7 +479,7 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
           <>
             <ASpace direction='vertical' size={20} className='w-full'>
               <ACard>
-                <ASpace direction='horizontal'>
+                <ASpace direction='horizontal' wrap={true}>
                   {
                     renderSearchControl()
                   }
@@ -515,6 +521,7 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
               placement='left'
               closable={false}
             >
+              {/* 表单 */}
               <UxForm<T>
                 name="ljlag"
                 form={form}

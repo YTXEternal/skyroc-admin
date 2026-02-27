@@ -1,26 +1,55 @@
 import {UxFormType} from '@/components/CRUD/UxForm/types';
 export const commonEditForm: UxFormType = {
-  role_name: {
+  user_name: {
     type: 'input',
-    'message': '请填写名称',
+    'message': '请填写用户名',
     'required': true,
     'value': '',
-    label: '名称'
+    label: '用户名'
   },
-  role_key: {
+  nick_name: {
     type: 'input',
-    'message': '请填写标识',
+    'message': '请填写昵称',
     'required': true,
     'value': '',
-    label: '标识',
+    label: '昵称',
   },
-  role_sort: {
-    type: 'inputNumber',
-    'value': 0,
-    label: '排序',
-    formatter: (value) => {
-      console.log('sort', value);
-      return Number(value);
+  password: {
+    type: 'inputPassword',
+    'message': '请填写密码',
+    'required': true,
+    'value': '',
+    label: '密码',
+  },
+   phonenumber: {
+    type: 'input',
+    'value': '',
+    label: '手机号',
+  },
+   email: {
+    type: 'input',
+    'value': '',
+    label: '邮箱',
+  },
+   sex: {
+    type: 'select',
+    'value': '0',
+    label: '性别',
+    'nativeProps':{
+      options: [
+        {
+          label: '男',
+          value: '0'
+        },
+        {
+          label: '女',
+          value: '1'
+        },
+         {
+          label: '未知',
+          value: '2'
+        }
+      ]
     }
   },
   status: {
@@ -32,32 +61,27 @@ export const commonEditForm: UxFormType = {
       "true": "0",
     },
   },
-  menu_check_strictly: {
-    type: 'switch',
-    'value': true,
-    label: '菜单树选择项是否关联显示',
-    map: {
-      false: false,
-      true: true
-    }
-  },
-  dept_check_strictly: {
-    type: 'switch',
-    'value': true,
-    label: '部门树选择项是否关联显示',
-    map: {
-      false: false,
-      true: true
-    }
-  },
-  menu_ids: {
+  post_ids: {
     type: 'tree',
-    'label': '权限',
+    'label': '岗位',
     'value': [],
     nativeProps: {
       'fieldNames': {
         'title': 'menu_name',
         'key': 'menu_id',
+        children: 'children'
+      },
+      'treeData': [],
+    }
+  },
+  role_ids: {
+    type: 'tree',
+    'label': '所属角色',
+    'value': [],
+    nativeProps: {
+      'fieldNames': {
+        'title': 'role_name',
+        'key': 'role_id',
         children: 'children'
       },
       'treeData': [],
@@ -71,16 +95,5 @@ export const commonEditForm: UxFormType = {
   },
 }
 
-export type FormFieldType = {
-  role_name:string;
-  role_key:string;
-  role_sort:number;
-  status:string;
-  menu_check_strictly:boolean;
-  dept_check_strictly:boolean;
-  menu_ids:string[];
-  remark:string;
-  create_time:string;
-  update_time:string;
-}
+export type FormFieldType = Api.User.AddRequest;
 

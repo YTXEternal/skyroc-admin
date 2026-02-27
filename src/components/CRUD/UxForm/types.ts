@@ -113,7 +113,7 @@ export type CommonFormItem = {
    value:any;
    formatter?:(value:any)=>any;
 }
-export type UxFormItem = UxFormInput | UxFormSwitch | UxFormTree | UxFormSelect | UxFormInputNumber|UxFormTextarea
+export type UxFormItem = UxFormInput |UxFormInputPassword| UxFormSwitch | UxFormTree | UxFormSelect | UxFormInputNumber|UxFormTextarea
 
 
 /**
@@ -126,6 +126,21 @@ export type UxFormItem = UxFormInput | UxFormSwitch | UxFormTree | UxFormSelect 
  */
 export interface UxFormInput extends CommonFormItem {
   type:'input'
+  nativeProps?:InputProps
+}
+
+
+
+/**
+ * 密码框
+ *
+ * @export
+ * @interface UxFormInputPassword
+ * @typedef {UxFormInputPassword}
+ * @extends {CommonFormItem}
+ */
+export interface UxFormInputPassword extends CommonFormItem {
+  type:'inputPassword'
   nativeProps?:InputProps
 }
 

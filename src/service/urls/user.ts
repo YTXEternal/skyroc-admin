@@ -1,7 +1,8 @@
-/** 角色管理 */
+/** 用户管理 */
 
-export const ROLES_URLS = {
-  SYSTEM_ROLE_LIST: '/system/user/list',
-  SYSTEM_ROLE_BASE: '/system/user',
-  SYSTEM_ROLE_CHANGESTATUS: '/system/user/changeStatus',
+export const USER_URLS = {
+  SYSTEM_USER_LIST: '/system/user/list',
+  SYSTEM_USER_BASE: '/system/user',
+  SYSTEM_USER_CHANGESTATUS: '/system/user/changeStatus',
+  SYSTEM_USER_RESET_PWD: '/system/user/resetPwd',
 } as const;

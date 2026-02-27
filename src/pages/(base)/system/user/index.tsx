@@ -4,31 +4,31 @@ import UxCRUD from '@/components/CRUD/UxCRUD';
 import type { UxCRUDColumns, UxCRUDProps } from '@/components/CRUD/UxCRUD/types';
 import type { UxFormType, UxFormProps, UxFormData } from '@/components/CRUD/UxForm/types'
 import { commonEditForm, type FormFieldType } from './form';
-import { fetchRolesList, fetchDelRoles, fetchMenuList, fetchAddRoles, fetchRoleDetails, fetchPutRole, fetchPutRoleStatus } from '@/service/api';
-type RowData = Api.Roles.ListItem;
+import { fetchUserList, fetchDelUser, fetchMenuList, fetchAddUser, fetchUserDetails, fetchPutUser, fetchPutUserStatus } from '@/service/api';
+import { useAuth } from '@/features/auth';
+import { LIST_PERMISSIONS, EDIT_PERMISSIONS, DEL_PERMISSIONS, DETAIL_PERMISSIONS, ADD_PERMISSIONS } from './permissions';
+type RowData = Api.User.ListItem;
+
+const rowIdKey = 'user_id';
 const Component = () => {
   const [treeData, setTreeData] = useState<Api.Menu.List>([]);
-
+  const { hasAuth } = useAuth();
   const useFormField = () => {
     const form = refactorFormField({
       form: commonEditForm, refactorKeys: {
-        'menu_ids': (val) => {
+        'role_ids': (val) => {
           val.type === 'tree';
           val.nativeProps = {
             ...val.nativeProps,
             // @ts-ignore
             treeData,
-            'fieldNames': {
-              'title': 'menu_name',
-              'key': 'menu_id',
-              'children': 'children'
-            }
           }
           return val;
         }
       }
     });
     useEffect(() => {
+      if (!hasAuth(LIST_PERMISSIONS)) return;
       fetchMenuList({
         status: "0"
       }).then(data => {
@@ -44,9 +44,9 @@ const Component = () => {
   const useTable = () => {
     const columns: UxCRUDColumns<RowData> = [
       {
-        title: '角色名称',
-        key: 'role_name',
-        dataIndex: 'role_name',
+        title: '用户名',
+        key: 'user_name',
+        dataIndex: 'user_name',
         'searchConfig': {
           on: true,
           type: 'input',
@@ -54,10 +54,38 @@ const Component = () => {
         }
       },
       {
-        title: '标识',
-        key: 'role_key',
-        dataIndex: 'role_key',
+        title: '昵称',
+        key: 'nick_name',
+        dataIndex: 'nick_name',
+      },
+      {
+        title: '邮箱',
+        key: 'email',
+        dataIndex: 'email',
+      },
+      {
+        title: '手机号',
+        key: 'phonenumber',
+        dataIndex: 'phonenumber',
+        'searchConfig': {
+          on: true,
+          type: 'input',
+          defaultVal: ''
+        }
+      },
+      {
+        title: '性别',
+        key: 'sex',
+        dataIndex: 'sex',
         type: 'tag',
+        formatter(record) {
+          const collection: Record<string, string> = {
+            '0': '男',
+            '1': '女',
+            '2': '未知'
+          };
+          return collection[record.sex];
+        }
       },
       {
         title: '状态',
@@ -91,9 +119,8 @@ const Component = () => {
         type: 'switch',
         async onChange(value, record) {
           const status = value ? "0" : "1";
-          const { role_id } = record;
-          await fetchPutRoleStatus({
-            role_id,
+          await fetchPutUserStatus({
+            [rowIdKey]: record[rowIdKey],
             status
           });
           window.$message?.success('状态更新成功');
@@ -101,28 +128,18 @@ const Component = () => {
         },
         formatter(value) {
           return value === '0';
+        },
+        nativeConf: {
+          'disabled': !hasAuth(EDIT_PERMISSIONS)
         }
       },
-      // {
-      //   title: '排序',
-      //   key: 'role_sort',
-      //   dataIndex: 'role_sort',
-      // },
-      // {
-      //   title: '数据范围',
-      //   key: 'data_scope',
-      //   dataIndex: 'data_scope',
-      // },
-      // {
-      //   title: '菜单关联',
-      //   key: 'menu_check_strictly',
-      //   dataIndex: 'menu_check_strictly',
-      // },
-      // {
-      //   title: '部门关联',
-      //   key: 'dept_check_strictly',
-      //   dataIndex: 'dept_check_strictly',
-      // },
+      {
+        title: '密码最后更新时间',
+        key: 'pwd_update_date',
+        dataIndex: 'pwd_update_date',
+        type: 'time',
+        'format': 'YYYY-MM-DD HH:mm:ss'
+      },
       {
         title: '备注',
         key: 'remark',
@@ -152,28 +169,32 @@ const Component = () => {
       {
         'text': '编辑',
         'type': 'edit',
-        'fetchGetDetail': (record) => fetchRoleDetails(record.role_id),
-        'title': '编辑角色',
+        'fetchGetDetail': async (record) => {
+          const r = await fetchUserDetails(record[rowIdKey]);
+          console.log('r', r);
+          return r;
+        },
+        'title': '编辑用户',
         'key': 'edit',
         'onConfirm': (record) => {
           console.log('record', record);
-          return fetchPutRole(record);
+          return fetchPutUser(record);
         },
         'whiteKeys': ['role_id'],
-        permissions: ['system:role:edit'],
-        detailPermissions: ['system:role:query'],
+        permissions: EDIT_PERMISSIONS,
+        detailPermissions: DETAIL_PERMISSIONS,
       },
       {
         'text': '删除',
         'type': 'del',
         'key': 'edit',
         'onConfirm': (record) => {
-          return fetchDelRoles({
-            role_ids: [record.role_id]
+          return fetchDelUser({
+            'user_ids': [record[rowIdKey]]
           });
         },
-        'formatterConfirmText': (record) => `确定删除角色:${record.role_name}吗？`,
-        permissions: ['system:role:remove'],
+        'formatterConfirmText': (record) => `确定删除账号"${record.user_name}"吗？`,
+        permissions: DEL_PERMISSIONS,
         successText: '删除成功',
         errorText: '删除失败',
       },
@@ -185,21 +206,20 @@ const Component = () => {
   }
 
   return <>
-    <UxCRUD<Api.Roles.ListItem>
+    <UxCRUD<Api.User.ListItem>
       columns={columns}
-      fetchGetList={fetchRolesList}
+      fetchGetList={fetchUserList}
       action={actions}
       form={form}
       addButtons={{
         'text': '新增',
         'onConfirm': async (record) => {
-          console.log('fetchAddRoles', record);
-          return await fetchAddRoles(record);
+          return await fetchAddUser(record);
         },
-        permissions: ['system:role:add']
+        permissions: ADD_PERMISSIONS
       }}
       permissions={
-        ['system:role:list']
+        LIST_PERMISSIONS
       }
     >
     </UxCRUD>

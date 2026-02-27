@@ -231,6 +231,6 @@ declare global {
   export type { RefactorKeys } from '../components/CRUD/UxForm/index'
   import('../components/CRUD/UxForm/index')
   // @ts-ignore
-  export type { UxFormProps, UxFormData, UxFormType, CommonFormItem, UxFormItem, UxFormInput, UxFormSwitch, UxFormTree, UxFormSelect, UxFormInputNumber, UxFormTextarea } from '../components/CRUD/UxForm/types'
+  export type { UxFormProps, UxFormData, UxFormType, CommonFormItem, UxFormItem, UxFormInput, UxFormInputPassword, UxFormSwitch, UxFormTree, UxFormSelect, UxFormInputNumber, UxFormTextarea } from '../components/CRUD/UxForm/types'
   import('../components/CRUD/UxForm/types')
 }

@@ -1,6 +1,6 @@
 
-import type { TableProps, TableColumnProps, TableColumnType, InputProps, SelectProps, SwitchProps } from 'antd';
-import type { UxFormProps, UxFormData } from '@/components/CRUD/UxForm/types';
+import type { TableColumnProps, TableColumnType, InputProps, SelectProps, SwitchProps } from 'antd';
+import type { UxFormProps, UxFormData,UxFormType } from '@/components/CRUD/UxForm/types';
 export type CRUDCOmponentType = 'input';
 export type Permissions = string[] | string;
 
@@ -24,7 +24,7 @@ export type SearchCompSelect = {
 
 export type UxCRUDColumns<T> = ({
   searchConfig?: SearchConfig
-} & TableColumnType<T> & (UxCRUDTimeCol | UxCRUDTAGCol| UxCRUDSWITCHCol<T>))[];
+} & TableColumnType<T> & (UxCRUDTimeCol | UxCRUDTAGCol<T>| UxCRUDSWITCHCol<T>))[];
 export type UxCRUDTimeCol = {
   type?: 'time';
   /**
@@ -35,8 +35,9 @@ export type UxCRUDTimeCol = {
   format?: string;
 }
 
-export type UxCRUDTAGCol = {
+export type UxCRUDTAGCol<T> = {
   type?: 'tag';
+  formatter?:(record:T)=>unknown;
 }
 
 export type UxCRUDSWITCHCol<T> = {
@@ -107,6 +108,7 @@ export interface ActionEdit<T> extends ActionCommonType<T> {
   title: string;
   whiteKeys?: string[];
   detailPermissions?: Permissions;
+  form: UxFormType;
 }
 
 export interface SearchFieldProps {

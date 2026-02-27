@@ -3,9 +3,9 @@ import { objFor } from '@/utils/objFor';
 import { Form, FormProps } from 'antd';
 import { cloneDeep } from 'lodash-es';
 import { Input } from 'antd';
-import { SyncOutlined } from '@ant-design/icons';
+import { EyeInvisibleOutlined, EyeTwoTone, SyncOutlined } from '@ant-design/icons';
 
-const { TextArea } = Input;
+const { TextArea, Password } = Input;
 /**
  * 将传递进来的form 初始化成键值对
  *
@@ -35,12 +35,14 @@ export type RefactorKeys<T> = Record<string, (value: UxFormItem) => UxFormItem>;
  * @param {Record<string, (value: UxFormItem) => UxFormItem>} param0.refactorKeys
  * @returns {UxFormItem>; }) => any}
  */
-export const refactorFormField = ({ form, refactorKeys }: { form: UxFormType, refactorKeys: RefactorKeys<any> }) => {
+export const refactorFormField = ({ form, refactorKeys,blacklistKeys }: { form: UxFormType, refactorKeys: RefactorKeys<any>;blacklistKeys?:string[] }) => {
   const keys = Object.keys(refactorKeys || {});
   if (!keys.length) return form;
   const newForm = cloneDeep(form);
   const newRefactorKeys = cloneDeep(refactorKeys);
   keys.forEach(key => {
+    /** 过滤黑名单 */
+    if(blacklistKeys && blacklistKeys.length > 0 && blacklistKeys.includes(key)) return;
     newForm[key] = newRefactorKeys[key](newForm[key]);
   });
   return newForm;
@@ -105,7 +107,7 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data,
   useEffect(() => {
     const values = formatFormToValue(form);
     syncFormData(values)
-  }, []);
+  }, [form]);
 
   // 受控
   useEffect(() => {
@@ -130,6 +132,21 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data,
         case 'input':
           // @ts-ignore
           return <AInput className="w-full" key={key as React.Key} value={formData[key]} onChange={({ target }) => {
+            const { value } = target;
+            syncFormData({
+              ...formData,
+              [key]: (value)
+            })
+            // formInstance.setFieldValue(key, formatter(value));
+          }} {...(item.nativeProps || {})} />;
+          case 'inputPassword':
+          return <Password
+          iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+          className="w-full"
+          key={key as React.Key}
+          // @ts-ignore
+          value={formData[key]}
+          onChange={({ target }) => {
             const { value } = target;
             syncFormData({
               ...formData,

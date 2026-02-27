@@ -16,7 +16,6 @@ declare namespace Api {
       phonenumber: string;
       sex: string;
       avatar: string;
-      password: string;
       status: string;
       del_flag: string;
       login_ip: string;
@@ -25,6 +24,8 @@ declare namespace Api {
       create_by: string;
       update_by: string;
       remark: string;
+      update_time: string;
+      create_time: string;
     }
 
     /** 分页查询参数 */
@@ -52,7 +53,6 @@ declare namespace Api {
     type DelRequest = {
       user_ids: number[];
     }
-
     /**
      * 更新角色状态请求参数
      */
@@ -63,6 +63,7 @@ declare namespace Api {
       user_id: number;
     }
 
+    /** 重置密码请求参数 */
     type ResetPwd = {
       user_id: number;
       password: string;
