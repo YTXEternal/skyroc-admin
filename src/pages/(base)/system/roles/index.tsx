@@ -9,7 +9,6 @@ type RowData = Api.Roles.ListItem;
 const Component = () => {
   const [treeData, setTreeData] = useState<Api.Menu.List>([]);
 
-
   const useFormField = () => {
     const form = refactorFormField({
       form: commonEditForm, refactorKeys: {
@@ -104,27 +103,26 @@ const Component = () => {
           return value === '0';
         }
       },
-      {
-        title: '排序',
-        key: 'role_sort',
-        dataIndex: 'role_sort',
-      },
-      {
-        title: '数据范围',
-        key: 'data_scope',
-        dataIndex: 'data_scope',
-      },
-      {
-        title: '菜单关联',
-        key: 'menu_check_strictly',
-        dataIndex: 'menu_check_strictly',
-      },
-      {
-        title: '部门关联',
-        key: 'dept_check_strictly',
-        dataIndex: 'dept_check_strictly',
-      },
-
+      // {
+      //   title: '排序',
+      //   key: 'role_sort',
+      //   dataIndex: 'role_sort',
+      // },
+      // {
+      //   title: '数据范围',
+      //   key: 'data_scope',
+      //   dataIndex: 'data_scope',
+      // },
+      // {
+      //   title: '菜单关联',
+      //   key: 'menu_check_strictly',
+      //   dataIndex: 'menu_check_strictly',
+      // },
+      // {
+      //   title: '部门关联',
+      //   key: 'dept_check_strictly',
+      //   dataIndex: 'dept_check_strictly',
+      // },
       {
         title: '备注',
         key: 'remark',
@@ -186,7 +184,7 @@ const Component = () => {
     }
   }
 
-  return <div>
+  return <>
     <UxCRUD<Api.Roles.ListItem>
       columns={columns}
       fetchGetList={fetchRolesList}
@@ -205,7 +203,7 @@ const Component = () => {
       }
     >
     </UxCRUD>
-  </div>;
+  </>;
 };
 
 

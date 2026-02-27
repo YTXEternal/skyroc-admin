@@ -3,7 +3,7 @@ import { AnyObject } from 'antd/es/_util/type';
 import type { UxCRUDProps, UxCRUDColumns, ActionDel, ActionEdit, SearchFieldProps, Permissions, UxCRUDSWITCHCol } from './types';
 import type { TableProps, PaginationProps, TableColumnType } from 'antd';
 import { PlusOutlined } from '@ant-design/icons'
-import { cloneDeep } from 'lodash-es';
+import { cloneDeep,debounce } from 'lodash-es';
 import { JSX } from 'react';
 import UxForm from '@/components/CRUD/UxForm';
 import type { UxFormProps, UxFormData } from '@/components/CRUD/UxForm/types';
@@ -119,10 +119,11 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
       }
     });
     const [loading, setLoading] = useState<boolean>(false);
-    const fetchList = async () => {
+    const fetchList = debounce(async () => {
       if (!isPermission(permissions)) {
         return window.$message?.error('您没有相关权限');
       };
+      console.log('useQuery',dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'))
       const params = {
         ...searchParams,
         pageNum: pagination.current!,
@@ -139,7 +140,7 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
       } finally {
         setLoading(false);
       }
-    }
+    },500);
 
     /** 初始化搜索参数 */
     const initSearchParams = () => {
@@ -210,7 +211,6 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
     useEffect(() => {
       fetchList();
     }, [pagination!.current, pagination!.pageSize, searchParams])
-
 
     return {
       dataSource,
