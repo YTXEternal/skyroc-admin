@@ -65,6 +65,8 @@ const Component = () => {
   useEffect(() => {
     commonFetch();
   }, []);
+
+
   useEffect(() => {
     updateEditFormTreeData();
   }, [treeData]);
@@ -96,94 +98,86 @@ const Component = () => {
     })
   }
 
-  const useTable = () => {
-    const columns: UxCRUDColumns<RowData> = [
-      {
-        title: '角色名称',
-        key: 'role_name',
-        dataIndex: 'role_name',
-        'searchConfig': {
-          on: true,
-          type: 'input',
-          defaultVal: ''
-        }
-      },
-      {
-        title: '标识',
-        key: 'role_key',
-        dataIndex: 'role_key',
-        type: 'tag',
-      },
-      {
-        title: '状态',
-        key: 'status',
-        dataIndex: 'status',
-        searchConfig: {
-          on: true,
-          type: 'select',
-          defaultVal: "0",
-          placeholder: '请选择状态',
-          nativeConf: {
-            style: {
-              width: 'width:80px'
-            },
-            options: [
-              {
-                label: '所有',
-                value: null
-              },
-              {
-                label: '启用',
-                value: '0'
-              },
-              {
-                label: '停用',
-                value: '1'
-              }
-            ]
-          }
-        },
-        type: 'switch',
-        async onChange(value, record) {
-          const status = value ? "0" : "1";
-          const { role_id } = record;
-          await fetchPutRoleStatus({
-            role_id,
-            status
-          });
-          window.$message?.success('状态更新成功');
-          return true;
-        },
-        formatter(value) {
-          return value === '0';
-        },
+  const columns: UxCRUDColumns<RowData> = [
+    {
+      title: '角色名称',
+      key: 'role_name',
+      dataIndex: 'role_name',
+      'searchConfig': {
+        on: true,
+        type: 'input',
+        defaultVal: ''
+      }
+    },
+    {
+      title: '标识',
+      key: 'role_key',
+      dataIndex: 'role_key',
+      type: 'tag',
+    },
+    {
+      title: '状态',
+      key: 'status',
+      dataIndex: 'status',
+      searchConfig: {
+        on: true,
+        type: 'select',
+        defaultVal: "0",
+        placeholder: '请选择状态',
         nativeConf: {
-          'disabled': !hasAuth('system:role:edit')
+          style: {
+            width: 'width:80px'
+          },
+          options: [
+            {
+              label: '所有',
+              value: null
+            },
+            {
+              label: '启用',
+              value: '0'
+            },
+            {
+              label: '停用',
+              value: '1'
+            }
+          ]
         }
       },
-      {
-        title: '备注',
-        key: 'remark',
-        dataIndex: 'remark',
+      type: 'switch',
+      async onChange(value, record) {
+        const status = value ? "0" : "1";
+        const { role_id } = record;
+        await fetchPutRoleStatus({
+          role_id,
+          status
+        });
+        window.$message?.success('状态更新成功');
+        return true;
       },
-      {
-        title: '创建时间',
-        key: 'create_time',
-        type: 'time',
+      formatter(value) {
+        return value === '0';
       },
-      {
-        title: '更新时间',
-        key: 'update_time',
-        type: 'time'
-      },
-    ];
-    return {
-      columns
-    }
-  };
-  const {
-    columns
-  } = useTable();
+      nativeConf: {
+        'disabled': !hasAuth('system:role:edit')
+      }
+    },
+    {
+      title: '备注',
+      key: 'remark',
+      dataIndex: 'remark',
+    },
+    {
+      title: '创建时间',
+      key: 'create_time',
+      type: 'time',
+    },
+    {
+      title: '更新时间',
+      key: 'update_time',
+      type: 'time'
+    },
+  ];
 
   const [action, setAction] = useState<UxCRUDProps<RowData>['action']>({
     buttons: [

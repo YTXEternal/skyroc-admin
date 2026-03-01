@@ -107,7 +107,6 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data,
   */
   useEffect(() => {
     const values = formatFormToValue(form);
-    console.log('useEffectform', form);
     syncFormData(values)
   }, [form]);
   /**

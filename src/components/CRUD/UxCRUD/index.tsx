@@ -12,6 +12,9 @@ import { formatFormToValue } from '@/components/CRUD/UxForm';
 import { useAuth } from '@/features/auth';
 import ExceptionBase from '@/components/ExceptionBase';
 
+// 分页默认每页20条
+const pageSize = 20;
+
 function SearchField({ children, label }: SearchFieldProps) {
   return (
     <ASpace direction='horizontal' size={10}>
@@ -21,6 +24,15 @@ function SearchField({ children, label }: SearchFieldProps) {
   )
 }
 
+
+
+/**
+ * 延迟
+ *
+ * @param {number} delay
+ * @returns {*}
+ */
+const wait = (delay: number) => new Promise((r) => setTimeout(r, delay));
 /**
  * 快速增删改查组件
  *
@@ -34,6 +46,7 @@ function SearchField({ children, label }: SearchFieldProps) {
  */
 export function UxCRUD<T extends UxFormData>({ columns, ref, rowKey, fetchGetList, action, addButtons, permissions }: UxCRUDProps<T>) {
   const { hasAuth } = useAuth();
+  console.log('UxCRUD更新了');
   const [formType, setFormType] = useState<UxFormType>({});
   /**
     * 判断当前是否拥有权限
@@ -97,7 +110,9 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, rowKey, fetchGetLis
     });
   }
   const [cols, setCols] = useState<UxCRUDColumns<T>>(useFormatCols());
+
   const handleColumnstoFormData = () => {
+    console.log('handleColumnstoFormData', columns);
     if (!columns.length) return {} as AnyObject;
     const result: AnyObject = {};
     for (const val of columns) {
@@ -107,40 +122,51 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, rowKey, fetchGetLis
     }
     return result;
   }
+  const defaultSearchParams = useMemo(() => handleColumnstoFormData(), [columns]);
+  const recordSearchParams = useRef({});
   /**
    * 创建搜索/列表获取
    *
    * @returns {{ dataSource: any; setDataSource: any; pagination: any; setPagination: any; searchParams: any; renderSearchControl: () => any; loading: any; reset: () => void; }}
    */
-  const [searchParams, setSearchparams] = useState<AnyObject>(handleColumnstoFormData());
-  const useQuery = () => {
-    const [dataSource, setDataSource] = useState<T[]>([]);
-    const [pagination, setPagination] = useState<PaginationProps>({
-      current: 1,
-      pageSize: 20,
-      total: 0,
-      onChange(page: number, pageSize: number) {
-        setPagination({
-          ...pagination,
-          current: page,
-          pageSize,
-        })
-      }
+  const [searchParams, setSearchparams] = useState<AnyObject>(recordSearchParams.current);
+  const updateSeachParams = (params:AnyObject) =>{
+    setSearchparams({
+      ...params
     });
-    const [loading, setLoading] = useState<boolean>(false);
+    recordSearchParams.current = params;
+  }
+  const [dataSource, setDataSource] = useState<T[]>([]);
+  const [pagination, setPagination] = useState<PaginationProps>({
+    current: 1,
+    pageSize,
+    total: 0,
+    onChange(page: number, pageSize: number) {
+      setPagination({
+        ...pagination,
+        current: page,
+        pageSize,
+      })
+    }
+  });
+  const [loading, setLoading] = useState<boolean>(false);
+  const useQuery = () => {
     const fetchList = async () => {
       if (!isPermission(permissions)) {
         return window.$message?.error('您没有相关权限');
       };
       console.log('useQuery', dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'))
+      console.log('searchParams', searchParams);
       const params = {
-        ...searchParams,
+        ...recordSearchParams.current,
         pageNum: pagination.current!,
         pageSize: pagination.pageSize!,
       }
+      console.log('params', params);
       setLoading(true);
       try {
         const { list, total } = await fetchGetList(params);
+        await wait(500);
         setDataSource(list);
         setPagination({
           ...pagination,
@@ -155,8 +181,8 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, rowKey, fetchGetLis
 
     /** 初始化搜索参数 */
     const initSearchParams = () => {
-      const result = handleColumnstoFormData()
-      setSearchparams(result);
+      const result = cloneDeep(handleColumnstoFormData());
+      updateSeachParams(result);
     }
 
     /** 重置搜索条件 */
@@ -183,7 +209,7 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, rowKey, fetchGetLis
                   ...pagination,
                   current: 1,
                 })
-                setSearchparams({
+                updateSeachParams({
                   ...searchParams,
                   [key]: value
                 })
@@ -196,7 +222,7 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, rowKey, fetchGetLis
                   ...pagination,
                   current: 1,
                 })
-                setSearchparams({
+                updateSeachParams({
                   ...searchParams,
                   [key]: value
                 })
@@ -207,7 +233,7 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, rowKey, fetchGetLis
     }
     useEffect(() => {
       initSearchParams();
-    }, []);
+    }, [columns]);
 
     const watchList = () => {
       fetchList();
@@ -216,12 +242,7 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, rowKey, fetchGetLis
     /** 监听搜索参数变化 */
     useEffect(watchList!, [pagination!.current, pagination!.pageSize, searchParams])
     return {
-      dataSource,
-      setDataSource,
-      pagination,
-      setPagination,
       renderSearchControl,
-      loading,
       reset,
       fetchList
     }
@@ -231,6 +252,9 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, rowKey, fetchGetLis
     fetchList();
   }
 
+  useEffect(() => {
+    console.log('searchParams改变了', searchParams);
+  }, [searchParams])
 
   const [isAdd, setIsAdd] = useState<boolean>(false);
 
@@ -385,7 +409,6 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, rowKey, fetchGetLis
             break;
           case 'edit':
             onDrawerClose();
-
             break;
         }
       }
@@ -421,8 +444,6 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, rowKey, fetchGetLis
       ...(action.nativeConf || {}),
       'title': action.title,
       render(_, record) {
-        //  为什么这里就是无法检测到buttons存在的情况为什么为什么
-        console.log('render actions', action);
         if (!action.buttons?.length) return;
         return action.buttons?.map(val => {
           switch (val.type) {
@@ -435,7 +456,7 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, rowKey, fetchGetLis
       }
     }
     setCols([
-      ...nowCols.filter(v=>v.title !== action.title),
+      ...nowCols.filter(v => v.title !== action.title),
       actionCol
     ]);
   }, [action]);
@@ -461,20 +482,12 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, rowKey, fetchGetLis
   };
 
   const Buttons = useButtons();
-
-
   const Query = useQuery();
   const Actions = useActions();
-
   const {
-    dataSource,
-    setDataSource,
-    pagination,
     renderSearchControl,
-    loading,
     reset,
     fetchList,
-    setPagination,
   } = Query;
   const { onAddClick } = Buttons;
   const {
