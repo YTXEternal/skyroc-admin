@@ -5,6 +5,28 @@ export type CRUDCOmponentType = 'input';
 export type Permissions = string[] | string;
 
 
+/**
+ * Description placeholder
+ *
+ * @export
+ * @interface UxCRUDProps
+ * @typedef {UxCRUDProps}
+ * @template T 一行表格数据类型
+ */
+export interface UxCRUDProps<T extends UxFormData> {
+  //  columns:TableProps<T>['columns'];
+  columns: UxCRUDColumns<T>;
+  ref?: React.Ref<EXPORT_UxCRUDMethods>;
+  /**
+  * 获取列表接口
+  */
+  fetchGetList: FetchGetList<T>;
+  action: UxCRUDActions<T>;
+  addButtons: AddButtons<T>;
+  permissions?: Permissions;
+  rowKey:keyof T;
+}
+
 export type SearchConfig = {
   // 是否开启搜索
   on: boolean;
@@ -48,26 +70,7 @@ export type UxCRUDSWITCHCol<T> = {
 }
 
 
-/**
- * Description placeholder
- *
- * @export
- * @interface UxCRUDProps
- * @typedef {UxCRUDProps}
- * @template T 一行表格数据类型
- */
-export interface UxCRUDProps<T extends UxFormData> extends Pick<UxFormProps<T>, 'form'> {
-  //  columns:TableProps<T>['columns'];
-  columns: UxCRUDColumns<T>;
-  ref?: React.Ref<EXPORT_UxCRUDMethods>;
-  /**
-  * 获取列表接口
-  */
-  fetchGetList: FetchGetList<T>;
-  action: UxCRUDActions<T>;
-  addButtons: AddButtons<T>;
-  permissions?: Permissions;
-}
+
 
 export type EXPORT_UxCRUDMethods = {
   refresh: () => void;
@@ -103,7 +106,7 @@ export interface ActionDel<T> extends ActionCommonType<T> {
 export interface ActionEdit<T> extends ActionCommonType<T> {
   type: 'edit';
   // 获取行数据详情
-  fetchGetDetail: (record: T) => Promise<T>;
+  fetchGetDetail?: (record: T) => Promise<T>;
   // 编辑弹窗标题
   title: string;
   whiteKeys?: string[];
@@ -114,6 +117,7 @@ export interface ActionEdit<T> extends ActionCommonType<T> {
 export interface SearchFieldProps {
   children: React.ReactNode;
   label: string;
+  key:string;
 }
 
 
@@ -144,4 +148,5 @@ export interface AddButtons<T extends UxFormData = UxFormData> {
    */
   errorText?: string;
   permissions?: Permissions;
+  form: UxFormType;
 }

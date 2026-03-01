@@ -225,7 +225,7 @@ declare global {
   export type { ECOption } from '../hooks/common/echarts'
   import('../hooks/common/echarts')
   // @ts-ignore
-  export type { CRUDCOmponentType, Permissions, SearchConfig, SearchCompInput, SearchCompSelect, UxCRUDColumns, UxCRUDTimeCol, UxCRUDTAGCol, UxCRUDSWITCHCol, UxCRUDProps, EXPORT_UxCRUDMethods, FetchGetList, Actions, UxCRUDActions, ActionCommonType, ActionDel, ActionEdit, SearchFieldProps, AddButtons } from '../components/CRUD/UxCRUD/types'
+  export type { CRUDCOmponentType, Permissions, UxCRUDProps, SearchConfig, SearchCompInput, SearchCompSelect, UxCRUDColumns, UxCRUDTimeCol, UxCRUDTAGCol, UxCRUDSWITCHCol, EXPORT_UxCRUDMethods, FetchGetList, Actions, UxCRUDActions, ActionCommonType, ActionDel, ActionEdit, SearchFieldProps, AddButtons } from '../components/CRUD/UxCRUD/types'
   import('../components/CRUD/UxCRUD/types')
   // @ts-ignore
   export type { RefactorKeys } from '../components/CRUD/UxForm/index'

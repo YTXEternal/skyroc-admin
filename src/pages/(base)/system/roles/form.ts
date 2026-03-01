@@ -60,7 +60,8 @@ export const commonEditForm: UxFormType = {
         'key': 'menu_id',
         children: 'children'
       },
-      'treeData': [],
+      'treeData': [
+      ],
     }
   },
   remark: {

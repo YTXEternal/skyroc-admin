@@ -4,7 +4,6 @@ import type { UxCRUDProps, UxCRUDColumns, ActionDel, ActionEdit, SearchFieldProp
 import { type TableProps, type PaginationProps, type TableColumnType } from 'antd';
 import { PlusOutlined } from '@ant-design/icons'
 import { cloneDeep, debounce } from 'lodash-es';
-import { JSX } from 'react';
 import UxForm from '@/components/CRUD/UxForm';
 import type { UxFormProps, UxFormData, UxFormType } from '@/components/CRUD/UxForm/types';
 import { nanoid } from '@sa/utils';
@@ -33,7 +32,7 @@ function SearchField({ children, label }: SearchFieldProps) {
  * @param {*} param0.fetchGetList
  * @returns {*}
  */
-export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, action, form, addButtons, permissions }: UxCRUDProps<T>) {
+export function UxCRUD<T extends UxFormData>({ columns, ref, rowKey, fetchGetList, action, addButtons, permissions }: UxCRUDProps<T>) {
   const { hasAuth } = useAuth();
   const [formType, setFormType] = useState<UxFormType>({});
   /**
@@ -99,15 +98,15 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
   }
   const [cols, setCols] = useState<UxCRUDColumns<T>>(useFormatCols());
   const handleColumnstoFormData = () => {
-      if (!columns.length) return {} as AnyObject;
-      const result: AnyObject = {};
-      for (const val of columns) {
-        if (!val.searchConfig?.on) continue;
-        const key = val.key as string;
-        result[key] = val?.searchConfig?.defaultVal;
-      }
-      return result;
+    if (!columns.length) return {} as AnyObject;
+    const result: AnyObject = {};
+    for (const val of columns) {
+      if (!val.searchConfig?.on) continue;
+      const key = val.key as string;
+      result[key] = val?.searchConfig?.defaultVal;
     }
+    return result;
+  }
   /**
    * 创建搜索/列表获取
    *
@@ -235,15 +234,18 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
 
   const [isAdd, setIsAdd] = useState<boolean>(false);
 
+  const nowCols = cloneDeep(cols);
+  const [modalText, setModalText] = useState<string>('');
+  const [drawerTitle, setDrawerTitle] = useState<string>('');
+  const [formData, setFormData] = useState<T>(formatFormToValue({}) as T);
+  const [nowAction, setNowAction] = useState<Actions<T>>();
+  const [nowRecord, setNowRecord] = useState<T>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
   /** 处理操作列 */
   const useActions = () => {
-    const nowCols = cloneDeep(cols);
-    const [modalText, setModalText] = useState<string>('');
-    const [drawerTitle, setDrawerTitle] = useState<string>('');
-    const [formData, setFormData] = useState<T>(formatFormToValue(form) as T);
-    const [nowAction, setNowAction] = useState<Actions<T>>();
-    const [nowRecord, setNowRecord] = useState<T>();
-    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const showModal = () => {
       setIsModalOpen(true);
     };
@@ -253,7 +255,6 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
     const handleModalCancel = () => {
       setIsModalOpen(false);
     };
-    const [drawerOpen, setDrawerOpen] = useState(false);
     const showDrawer = () => {
       setDrawerOpen(true);
     };
@@ -266,7 +267,13 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
 
 
 
-
+    /**
+     * 渲染删除按钮
+     *
+     * @param {ActionDel<T>} action
+     * @param {T} record
+     * @returns {*}
+     */
     const renderDelControl = (action: ActionDel<T>, record: T) => {
       return isPermission(action.permissions) ? <AButton key={nanoid()} variant='link' danger type='link' onClick={() => {
         setModalText(action.formatterConfirmText(record));
@@ -275,18 +282,36 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
         showModal();
       }}>{action.text}</AButton> : undefined;
     }
+
+    /**
+     * 渲染编辑按钮
+     *
+     * @param {ActionEdit<T>} action
+     * @param {T} record
+     * @returns {*}
+     */
     const renderEditControl = (action: ActionEdit<T>, record: T) => {
       return isPermission(action.permissions) ? <AButton key={nanoid()} variant='link' color='primary' type='link' onClick={async () => {
         /*
           判断当前是否拥有详情权限
         */
-        console.log('click edit', record);
         if (!isPermission(action.detailPermissions)) return;
+        let isSync = false;
+        let row = {} as T;
+        if (action.fetchGetDetail) {
+          isSync = true;
+          row = await action.fetchGetDetail(record);
+        }
         setDrawerTitle(action.title);
         setIsAdd(false);
         commonClick(action);
-        const row = await action.fetchGetDetail(record);
-        setFormData(row);
+        setFormType(action.form);
+        console.log('action.form', action.form);
+        if (isSync) {
+          setFormData(row);
+        }
+        // setFormType((addButtons.form));
+        // setFormData(formatFormToValue(addButtons.form ?? {}) as T);
         showDrawer();
       }}>{action.text}</AButton> : undefined;
     }
@@ -376,44 +401,44 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
       }
     }
 
-    useEffect(() => {
-      const actionCol: TableColumnType<T> = {
-        ...(action.nativeConf || {}),
-        'title': action.title,
-        render(_, record) {
-          return action.buttons.map(val => {
-            switch (val.type) {
-              case 'del':
-                return renderDelControl(val, record);
-              case 'edit':
-                return renderEditControl(val, record);
-            }
-          });
-        }
-      }
-      setCols([
-        ...nowCols,
-        actionCol
-      ])
-    }, []);
+
     return {
-      isModalOpen,
       handleModalOk,
       handleModalCancel,
-      modalText,
-      drawerTitle,
-      drawerOpen,
       onDrawerClose,
-      formData,
       onConfirm,
       onCancel,
-      nowAction,
       setDrawerTitle,
       showDrawer,
       setFormData,
+      renderDelControl,
+      renderEditControl
     }
   };
 
+  useEffect(() => {
+    const actionCol: TableColumnType<T> = {
+      ...(action.nativeConf || {}),
+      'title': action.title,
+      render(_, record) {
+        //  为什么这里就是无法检测到buttons存在的情况为什么为什么
+        console.log('render actions', action);
+        if (!action.buttons?.length) return;
+        return action.buttons?.map(val => {
+          switch (val.type) {
+            case 'del':
+              return Actions.renderDelControl(val, record);
+            case 'edit':
+              return Actions.renderEditControl(val, record);
+          }
+        });
+      }
+    }
+    setCols([
+      ...nowCols.filter(v=>v.title !== action.title),
+      actionCol
+    ]);
+  }, [action]);
 
   /** 处理 额外的button */
   const useButtons = () => {
@@ -421,7 +446,8 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
       const onAddClick = () => {
         setDrawerTitle('新增角色');
         setIsAdd(true);
-        setFormData(formatFormToValue(form) as T);
+        setFormType((addButtons.form));
+        setFormData(formatFormToValue(addButtons.form ?? {}) as T);
         showDrawer();
       };
       return {
@@ -452,20 +478,12 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
   } = Query;
   const { onAddClick } = Buttons;
   const {
-    isModalOpen,
     handleModalOk,
     handleModalCancel,
-    modalText,
-    drawerTitle,
-    drawerOpen,
     onDrawerClose,
-    formData,
     onConfirm,
     onCancel,
-    nowAction,
-    setDrawerTitle,
     showDrawer,
-    setFormData
   } = Actions;
 
   useImperativeHandle(ref, () => ({
@@ -504,6 +522,7 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
                 <ATable
                   loading={loading}
                   dataSource={dataSource}
+                  rowKey={rowKey}
                   columns={cols}
                   scroll={{ x: 'max-content' }}
                   pagination={pagination}
@@ -524,7 +543,7 @@ export function UxCRUD<T extends UxFormData>({ columns, ref, fetchGetList, actio
               {/* 表单 */}
               <UxForm<T>
                 name="ljlag"
-                form={form}
+                form={formType}
                 data={formData}
                 onSubmit={onConfirm}
                 onCancel={onCancel}

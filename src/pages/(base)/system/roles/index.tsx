@@ -6,43 +6,95 @@ import type { UxFormType, UxFormProps, UxFormData } from '@/components/CRUD/UxFo
 import { commonEditForm, type FormFieldType } from './form';
 import { fetchRolesList, fetchDelRoles, fetchMenuList, fetchAddRoles, fetchRoleDetails, fetchPutRole, fetchPutRoleStatus } from '@/service/api';
 import { useAuth } from '@/features/auth';
+import { cloneDeep } from 'lodash-es';
 type RowData = Api.Roles.ListItem;
 
 const Component = () => {
   const [treeData, setTreeData] = useState<Api.Menu.List>([]);
-  const {hasAuth} = useAuth();
-  const useFormField = () => {
-    const form = refactorFormField({
-      form: commonEditForm, refactorKeys: {
-        'menu_ids': (val) => {
-          val.type === 'tree';
-          val.nativeProps = {
-            ...val.nativeProps,
-            // @ts-ignore
-            treeData,
-            'fieldNames': {
-              'title': 'menu_name',
-              'key': 'menu_id',
-              'children': 'children'
-            }
-          }
-          return val;
-        }
+  const menuListRef = useRef<Api.Menu.List>([]);
+  const [formType, setFormType] = useState<UxFormType>({
+    ...commonEditForm,
+    menu_ids: {
+      type: 'tree',
+      'label': '权限',
+      'value': [],
+      nativeProps: {
+        'fieldNames': {
+          'title': 'menu_name',
+          'key': 'menu_id',
+          children: 'children'
+        },
+        // @ts-ignore
+        treeData,
       }
-    });
-    useEffect(() => {
-      if(!hasAuth('system:menu:list')) return;
-      fetchMenuList({
-        status: "0"
-      }).then(data => {
-        setTreeData(data || []);
-      })
-    }, []);
-    return {
-      form
+      ,
     }
+  });
+  const { hasAuth } = useAuth();
+  /** 一些通用数据的获取 */
+  const commonFetch = () => {
+    const fetchMenuData = async () => {
+      if (!hasAuth('system:menu:list')) return true;
+      const data = await fetchMenuList({
+        status: "0"
+      });
+      const form = refactorFormField({
+        form: commonEditForm, refactorKeys: {
+          'menu_ids': (val) => {
+            val.nativeProps = {
+              ...val.nativeProps,
+              // @ts-ignore
+              treeData: data,
+              'fieldNames': {
+                'title': 'menu_name',
+                'key': 'menu_id',
+                'children': 'children'
+              }
+            }
+            return val;
+          }
+        }
+      }) as UxFormType;
+      setFormType(form);
+      menuListRef.current = data || [];
+      setTreeData(data || []);
+      return true;
+    }
+    return Promise.all([fetchMenuData()]);
   }
-  const { form } = useFormField();
+  useEffect(() => {
+    commonFetch();
+  }, []);
+  useEffect(() => {
+    updateEditFormTreeData();
+  }, [treeData]);
+
+  const updateEditFormTreeData = () => {
+    const form: UxFormType = {
+      ...commonEditForm,
+      menu_ids: {
+        type: 'tree',
+        'label': '权限',
+        'value': [],
+        nativeProps: {
+          'fieldNames': {
+            'title': 'menu_name',
+            'key': 'menu_id',
+            children: 'children'
+          },
+          // @ts-ignore
+          treeData: menuListRef.current,
+        }
+
+      }
+    };
+    const cloneAction = cloneDeep(action);
+    // @ts-ignore
+    cloneAction.buttons[0].form = form;
+    setAction({
+      ...cloneAction,
+    })
+  }
 
   const useTable = () => {
     const columns: UxCRUDColumns<RowData> = [
@@ -105,30 +157,10 @@ const Component = () => {
         formatter(value) {
           return value === '0';
         },
-        nativeConf:{
-          'disabled':!hasAuth('system:role:edit')
+        nativeConf: {
+          'disabled': !hasAuth('system:role:edit')
         }
       },
-      // {
-      //   title: '排序',
-      //   key: 'role_sort',
-      //   dataIndex: 'role_sort',
-      // },
-      // {
-      //   title: '数据范围',
-      //   key: 'data_scope',
-      //   dataIndex: 'data_scope',
-      // },
-      // {
-      //   title: '菜单关联',
-      //   key: 'menu_check_strictly',
-      //   dataIndex: 'menu_check_strictly',
-      // },
-      // {
-      //   title: '部门关联',
-      //   key: 'dept_check_strictly',
-      //   dataIndex: 'dept_check_strictly',
-      // },
       {
         title: '备注',
         key: 'remark',
@@ -153,21 +185,24 @@ const Component = () => {
     columns
   } = useTable();
 
-  const actions: UxCRUDProps<RowData>['action'] = {
+  const [action, setAction] = useState<UxCRUDProps<RowData>['action']>({
     buttons: [
       {
         'text': '编辑',
         'type': 'edit',
-        'fetchGetDetail': (record) => fetchRoleDetails(record.role_id),
+        'fetchGetDetail': async (record) => {
+          await commonFetch();
+          return fetchRoleDetails(record.role_id)
+        },
         'title': '编辑角色',
         'key': 'edit',
         'onConfirm': (record) => {
-          console.log('record', record);
           return fetchPutRole(record);
         },
         'whiteKeys': ['role_id'],
         permissions: ['system:role:edit'],
         detailPermissions: ['system:role:query'],
+        'form': formType
       },
       {
         'text': '删除',
@@ -188,22 +223,25 @@ const Component = () => {
     'nativeConf': {
       'fixed': 'right'
     }
+  })
+
+
+  const addButtons: AddButtons<Api.Roles.ListItem> = {
+    'text': '新增',
+    'onConfirm': async (record) => {
+      return await fetchAddRoles(record);
+    },
+    permissions: ['system:role:add'],
+    form: formType
   }
 
   return <>
     <UxCRUD<Api.Roles.ListItem>
       columns={columns}
+      rowKey='role_id'
       fetchGetList={fetchRolesList}
-      action={actions}
-      form={form}
-      addButtons={{
-        'text': '新增',
-        'onConfirm': async (record) => {
-          console.log('fetchAddRoles', record);
-          return await fetchAddRoles(record);
-        },
-        permissions: ['system:role:add']
-      }}
+      action={action}
+      addButtons={addButtons}
       permissions={
         ['system:role:list']
       }

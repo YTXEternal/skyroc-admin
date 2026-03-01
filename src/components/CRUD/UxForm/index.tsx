@@ -13,6 +13,7 @@ const { TextArea, Password } = Input;
  * @returns {UxFormType}
  */
 export const formatFormToValue = <T extends UxFormType = UxFormType>(form: T) => {
+  if (Object.keys(form).length === 0) return {} as UxFormData;
   const values = {} as UxFormData;
   objFor(form, (key, val) => {
     const k = key as string;
@@ -35,14 +36,14 @@ export type RefactorKeys<T> = Record<string, (value: UxFormItem) => UxFormItem>;
  * @param {Record<string, (value: UxFormItem) => UxFormItem>} param0.refactorKeys
  * @returns {UxFormItem>; }) => any}
  */
-export const refactorFormField = ({ form, refactorKeys,blacklistKeys }: { form: UxFormType, refactorKeys: RefactorKeys<any>;blacklistKeys?:string[] }) => {
+export const refactorFormField = ({ form, refactorKeys, blacklistKeys }: { form: UxFormType, refactorKeys: RefactorKeys<any>; blacklistKeys?: string[] }) => {
   const keys = Object.keys(refactorKeys || {});
   if (!keys.length) return form;
   const newForm = cloneDeep(form);
   const newRefactorKeys = cloneDeep(refactorKeys);
   keys.forEach(key => {
     /** 过滤黑名单 */
-    if(blacklistKeys && blacklistKeys.length > 0 && blacklistKeys.includes(key)) return;
+    if (blacklistKeys && blacklistKeys.length > 0 && blacklistKeys.includes(key)) return;
     newForm[key] = newRefactorKeys[key](newForm[key]);
   });
   return newForm;
@@ -106,10 +107,13 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data,
   */
   useEffect(() => {
     const values = formatFormToValue(form);
+    console.log('useEffectform', form);
     syncFormData(values)
   }, [form]);
-
-  // 受控
+  /**
+   *
+   * 同步外部数据表单
+  */
   useEffect(() => {
     if (!data) return;
     syncFormData(data)
@@ -131,7 +135,7 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data,
       switch (item.type) {
         case 'input':
           // @ts-ignore
-          return <AInput className="w-full" key={key as React.Key} value={formData[key]} onChange={({ target }) => {
+          return <AInput className="w-full" value={formData[key]} onChange={({ target }) => {
             const { value } = target;
             syncFormData({
               ...formData,
@@ -139,24 +143,24 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data,
             })
             // formInstance.setFieldValue(key, formatter(value));
           }} {...(item.nativeProps || {})} />;
-          case 'inputPassword':
+        case 'inputPassword':
           return <Password
-          iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-          className="w-full"
-          key={key as React.Key}
-          // @ts-ignore
-          value={formData[key]}
-          onChange={({ target }) => {
-            const { value } = target;
-            syncFormData({
-              ...formData,
-              [key]: (value)
-            })
-            // formInstance.setFieldValue(key, formatter(value));
-          }} {...(item.nativeProps || {})} />;
+            iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+            className="w-full"
+
+            // @ts-ignore
+            value={formData[key]}
+            onChange={({ target }) => {
+              const { value } = target;
+              syncFormData({
+                ...formData,
+                [key]: (value)
+              })
+              // formInstance.setFieldValue(key, formatter(value));
+            }} {...(item.nativeProps || {})} />;
         case 'textarea':
           // @ts-ignore
-          return <TextArea className="w-full" key={key as React.Key} value={formData[key]} onChange={({ target }) => {
+          return <TextArea className="w-full" value={formData[key]} onChange={({ target }) => {
             const { value } = target;
             syncFormData({
               ...formData,
@@ -166,7 +170,7 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data,
           }} {...(item.nativeProps || {})} />;
         case 'inputNumber':
           // @ts-ignore
-          return <AInputNumber className="w-full" key={key as React.Key} value={formData[key]} onChange={(value) => {
+          return <AInputNumber className="w-full" value={formData[key]} onChange={(value) => {
             syncFormData({
               ...formData,
               [key]: value
@@ -175,7 +179,7 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data,
           }} {...(item.nativeProps || {})} />;
         case 'select':
           // @ts-ignore
-          return <ASelect className="w-full" key={key as React.Key} value={formData[key]} {...(item.nativeProps || {})} />;
+          return <ASelect className="w-full" value={formData[key]} {...(item.nativeProps || {})} />;
         case 'switch':
           const formatSwitchVal = (checked: any) => {
             if (item.map['false'] === checked) {
@@ -185,16 +189,17 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data,
             }
           }
           // @ts-ignore
-          return <ASwitch key={key as React.Key} checked={formatSwitchVal(formData[key])} onChange={(checked) => {
+          return <ASwitch checked={formatSwitchVal(formData[key])} onChange={(checked) => {
             syncFormData({
               ...formData,
               [key]: checked
             }, false)
           }} {...(item.nativeProps || {})} />;
         case 'tree':
+          // @ts-ignore
           return <ATree
             checkStrictly={true}
-            checkable={true} key={key as React.Key}
+            checkable={true}
             checkedKeys={
               // @ts-ignore
               formatter(formData[key])
@@ -206,11 +211,12 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data,
             }) => {
               formInstance.setFieldValue(key, checked);
               syncFormData({
-              ...formData,
-              [key]: checked
-            })
+                ...formData,
+                [key]: checked
+              })
             }}
-            {...(item.nativeProps || {})} />;
+            {...(item.nativeProps || {})}
+          />;
       }
     }
     return (
@@ -227,7 +233,6 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data,
     )
   }
 
-
   const syncFormData = <DATA extends UxFormData>(values: DATA, skip: boolean = false) => {
     const result = cloneDeep(values);
     const formKeys = Object.keys(form || {});
@@ -237,6 +242,7 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data,
       // @ts-ignore
       result[key] = val;
     })
+    /** 是否跳过同步表单控件的值更新 */
     if (!skip) {
       formInstance.setFieldsValue(cloneDeep(result));
     }
@@ -254,7 +260,7 @@ const UxForm = <T extends UxFormData = UxFormData>({ name, onSubmit, form, data,
 
   return (
     <>
-      <ASpin  size="large" tip="Loading" spinning={loading}>
+      <ASpin size="large" tip="Loading" spinning={loading}>
         <AForm
           name={name}
           form={formInstance}
